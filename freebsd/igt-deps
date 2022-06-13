@@ -1,0 +1,26 @@
+FreeBSD pkg dependencies for building and running igt-gpu-tools
+
+FOUND:
+gcc
+flex
+bison
+meson
+pkgconf
+libdrm
+libpciaccess
+libunwind
+elfutils
+pixman
+valgrind
+cairo
+libudev-devd
+glib
+xmlrpc-c
+gsl
+alsa-lib
+curl
+
+NOT FOUND:
+libkmod
+libprocps
+

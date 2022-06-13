@@ -120,8 +120,10 @@ endif
 build_info += 'With libdrm: ' + ','.join(libdrm_info)
 
 pciaccess = dependency('pciaccess', version : '>=0.10')
-libkmod = dependency('libkmod')
-libprocps = dependency('libprocps', required : true)
+# libkmod = dependency('libkmod')
+# libprocps = dependency('libprocps', required : true)
+libkmod = dependency('libkmod', required : false)
+libprocps = dependency('libprocps', required : false)
 
 libunwind = dependency('libunwind', required : get_option('libunwind'))
 build_info += 'With libunwind: @0@'.format(libunwind.found())
