@@ -41,6 +41,8 @@
 #include <linux/kd.h>
 #elif HAVE_SYS_KD_H
 #include <sys/kd.h>
+#elif HAVE_SYS_CONSIO_H
+#include <sys/consio.h>
 #endif
 
 #include <libudev.h>

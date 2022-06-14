@@ -210,6 +210,9 @@ endif
 if cc.has_header('sys/kd.h')
 	config.set('HAVE_SYS_KD_H', 1)
 endif
+if cc.has_header('sys/consio.h')
+  config.set('HAVE_SYS_CONSIO_H', 1)
+endif
 if cc.has_header('libgen.h')
 	config.set('HAVE_LIBGEN_H', 1)
 endif
