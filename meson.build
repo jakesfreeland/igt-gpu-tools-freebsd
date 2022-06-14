@@ -86,7 +86,7 @@ with_libdrm = get_option('libdrm_drivers')
 
 build_info = ['Build type: ' + get_option('buildtype')]
 
-inc = include_directories('include/drm-uapi', 'include/linux-uapi', 'lib', 'lib/stubs/syscalls', '.')
+inc = include_directories('include/drm-uapi', 'include/linux-uapi', 'lib', 'lib/stubs/syscalls', '.', '/usr/local/include')
 
 inc_for_gtkdoc = include_directories('lib')
 
@@ -223,7 +223,7 @@ if cc.has_header('machine/cpufunc.h')
   config.set('HAVE_MACHINE_CPUFUNC_H', 1)
 endif
 if cc.has_header('fcntl.h')
-  config.set('HAVE_FCNTL_H, 1')
+  config.set('HAVE_FCNTL_H', 1)
 endif
 if cc.links('''
 #include <cpuid.h>
