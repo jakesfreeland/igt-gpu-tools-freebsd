@@ -21,6 +21,8 @@
  * IN THE SOFTWARE.
  */
 
+/* TODO: utilization of libkmod */
+
 #include <ctype.h>
 #include <signal.h>
 #include <errno.h>

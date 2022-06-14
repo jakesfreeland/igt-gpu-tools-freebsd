@@ -24,6 +24,7 @@
 #ifndef IGT_KMOD_H
 #define IGT_KMOD_H
 
+/* TODO: utilization of libkmod */
 #include <libkmod.h>
 
 #include "igt_list.h"

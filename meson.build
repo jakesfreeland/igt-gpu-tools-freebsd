@@ -122,7 +122,10 @@ build_info += 'With libdrm: ' + ','.join(libdrm_info)
 pciaccess = dependency('pciaccess', version : '>=0.10')
 # libkmod = dependency('libkmod')
 # libprocps = dependency('libprocps', required : true)
+
+# TODO: KERNEL MODULE HANDLING
 libkmod = dependency('libkmod', required : false)
+# TODO: AUDIO TESTING USING PROCFS
 libprocps = dependency('libprocps', required : false)
 
 libunwind = dependency('libunwind', required : get_option('libunwind'))
