@@ -43,7 +43,7 @@
 #include <sys/kd.h>
 #endif
 
-#ifdef __FREEBSD__
+#ifdef __FreeBSD__
 #include <sys/consio.h>
 #endif
 
