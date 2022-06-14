@@ -4,8 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 /* #include <sys/sysinfo.h> */
-#include <sys/sysmacros.h>
+/* #include <sys/sysmacros.h> */
 #include <time.h>
 #include <unistd.h>
 
