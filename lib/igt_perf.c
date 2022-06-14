@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <sys/sysinfo.h>
+/* #include <sys/sysinfo.h> */
 #include <sys/sysmacros.h>
 #include <time.h>
 #include <unistd.h>
@@ -100,7 +100,8 @@ static int
 _perf_open(uint64_t type, uint64_t config, int group, uint64_t format)
 {
 	struct perf_event_attr attr = { };
-	int nr_cpus = get_nprocs_conf();
+	/* int nr_cpus = get_nprocs_conf(); */
+	long nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
 	int cpu = 0, ret;
 
 	attr.type = type;
