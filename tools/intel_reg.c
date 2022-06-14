@@ -40,18 +40,8 @@
 
 #include "intel_reg_spec.h"
 
-
 #ifdef HAVE_SYS_IO_H
 #include <sys/io.h>
-#define IO_DEV_OPEN
-#define IO_DEV_CLOSE
-#elif HAVE_MACHINE_CPUFUNC_H && HAVE_FCNTL_H
-#include <machine/cpufunc.h>
-#include <fcntl.h>
-
-#define iopl(level)
-#define IO_DEV_OPEN            int io_dev = open("/dev/io", O_RDONLY);
-#define IO_DEV_CLOSE           fclose(io_dev);
 #else
 
 static inline int _not_supported(void)
@@ -62,10 +52,21 @@ static inline int _not_supported(void)
 #define inb(port)              _not_supported()
 #define outb(value, port)      _not_supported()
 #define iopl(level)
-#define IO_DEV_OPEN
-#define IO_DEV_CLOSE
 
 #endif /* HAVE_SYS_IO_H */
+
+#ifdef __FREEBSD__
+#include <machine/cpufunc.h>
+#include <fcntl.h>
+
+#define iopl(level)
+#define IO_DEV_OPEN            int io_dev = open("/dev/io", O_RDONLY);
+#define IO_DEV_CLOSE           fclose(io_dev);
+
+#else /* !__FREEBSD__ */
+#define IO_DEV_OPEN
+#define IO_DEV_CLOSE
+#endif /* __FREEBSD__ */
 
 struct config {
 	struct pci_device *pci_dev;

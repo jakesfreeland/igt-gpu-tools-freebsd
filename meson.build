@@ -210,20 +210,11 @@ endif
 if cc.has_header('sys/kd.h')
 	config.set('HAVE_SYS_KD_H', 1)
 endif
-if cc.has_header('sys/consio.h')
-  config.set('HAVE_SYS_CONSIO_H', 1)
-endif
 if cc.has_header('libgen.h')
 	config.set('HAVE_LIBGEN_H', 1)
 endif
 if cc.has_header('sys/io.h')
 	config.set('HAVE_SYS_IO_H', 1)
-endif
-if cc.has_header('machine/cpufunc.h')
-  config.set('HAVE_MACHINE_CPUFUNC_H', 1)
-endif
-if cc.has_header('fcntl.h')
-  config.set('HAVE_FCNTL_H', 1)
 endif
 if cc.links('''
 #include <cpuid.h>
