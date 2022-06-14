@@ -19,8 +19,18 @@ xmlrpc-c
 gsl
 alsa-lib
 curl
+python3
+json-c
+liboping
+libXv
+libX11
+libXext
+xorgproto
+libXrandr
+gtk-doc
 
 NOT FOUND:
 libkmod
 libprocps
+peg
 
