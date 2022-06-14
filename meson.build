@@ -219,6 +219,12 @@ endif
 if cc.has_header('sys/io.h')
 	config.set('HAVE_SYS_IO_H', 1)
 endif
+if cc.has_header('machine/cpufunc.h')
+  config.set('HAVE_MACHINE_CPUFUNC_H', 1)
+endif
+if cc.has_header('fcntl.h')
+  config.set('HAVE_FCNTL_H, 1')
+endif
 if cc.links('''
 #include <cpuid.h>
 #include <stddef.h>

@@ -43,6 +43,15 @@
 
 #ifdef HAVE_SYS_IO_H
 #include <sys/io.h>
+#define IO_DEV_OPEN
+#define IO_DEV_CLOSE
+#elif HAVE_MACHINE_CPUFUNC_H && HAVE_FCNTL_H
+#include <machine/cpufunc.h>
+#include <fcntl.h>
+
+#define iopl(level)
+#define IO_DEV_OPEN            int io_dev = open("/dev/io", O_RDONLY);
+#define IO_DEV_CLOSE           fclose(io_dev);
 #else
 
 static inline int _not_supported(void)
@@ -53,6 +62,8 @@ static inline int _not_supported(void)
 #define inb(port)              _not_supported()
 #define outb(value, port)      _not_supported()
 #define iopl(level)
+#define IO_DEV_OPEN
+#define IO_DEV_CLOSE
 
 #endif /* HAVE_SYS_IO_H */
 
@@ -368,8 +379,10 @@ static int read_register(struct config *config, struct reg *reg, uint32_t *valp)
 		break;
 	case PORT_PORTIO_VGA:
 		iopl(3);
+		IO_DEV_OPEN
 		val = inb(reg->addr);
 		iopl(0);
+		IO_DEV_CLOSE
 		break;
 	case PORT_MMIO_VGA:
 		val = INREG8(reg->addr);
@@ -434,8 +447,10 @@ static int write_register(struct config *config, struct reg *reg, uint32_t val)
 			return -1;
 		}
 		iopl(3);
+		IO_DEV_OPEN
 		outb(val, reg->addr);
 		iopl(0);
+		IO_DEV_CLOSE
 		break;
 	case PORT_MMIO_VGA:
 		if (val > 0xff) {
