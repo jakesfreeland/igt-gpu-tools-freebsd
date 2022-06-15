@@ -34,6 +34,7 @@
 #include "i915/gem_create.h"
 #include "igt_debugfs.h"
 #include "igt_aux.h"
+/* TODO: FreeBSD - libkmod library */
 /* #include "igt_kmod.h" */
 #include "igt_sysfs.h"
 #include "igt_core.h"
