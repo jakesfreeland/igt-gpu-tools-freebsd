@@ -180,13 +180,14 @@ static const char *forced_driver(void)
 // 	igt_i915_driver_load(NULL);
 // }
 
+/* TODO: FreeBSD - libkmod library */
 static const struct module {
 	unsigned int bit;
 	const char *module;
-	void (*modprobe)(const char *name);
+	/* void (*modprobe)(const char *name); */
 } modules[] = {
 	{ DRIVER_AMDGPU, "amdgpu" },
-	{ DRIVER_INTEL, "i915", modprobe_i915 },
+	{ DRIVER_INTEL, "i915" /*, modprobe_i915 */ },
 	{ DRIVER_MSM, "msm" },
 	{ DRIVER_PANFROST, "panfrost" },
 	{ DRIVER_V3D, "v3d" },
@@ -302,21 +303,22 @@ static int __search_and_open(const char *base, int offset, unsigned int chipset,
 	return -1;
 }
 
-void drm_load_module(unsigned int chipset)
-{
-	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-	pthread_mutex_lock(&mutex);
-	for (const struct module *m = modules; m->module; m++) {
-		if (chipset & m->bit) {
-			if (m->modprobe)
-				m->modprobe(m->module);
-			else
-				modprobe(m->module);
-		}
-	}
-	pthread_mutex_unlock(&mutex);
-}
+/* TODO: FreeBSD - libkmod library */
+// void drm_load_module(unsigned int chipset)
+// {
+// 	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+// 
+// 	pthread_mutex_lock(&mutex);
+// 	for (const struct module *m = modules; m->module; m++) {
+// 		if (chipset & m->bit) {
+// 			if (m->modprobe)
+// 				m->modprobe(m->module);
+// 			else
+// 				modprobe(m->module);
+// 		}
+// 	}
+// 	pthread_mutex_unlock(&mutex);
+// }
 
 static int __open_driver(const char *base, int offset, unsigned int chipset, int as_idx)
 {
