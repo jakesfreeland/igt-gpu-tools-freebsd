@@ -48,7 +48,8 @@
 #include "i915/gem.h"
 #include "i915/gem_create.h"
 #include "igt.h"
-#include "igt_kmod.h"
+/* TODO: FreeBSD - libkmod library */
+/* #include "igt_kmod.h" */
 #include "igt_sysfs.h"
 #include "igt_debugfs.h"
 #include "igt_device.h"
@@ -122,10 +123,11 @@ struct modeset_params lpsp_mode_params;
 struct modeset_params non_lpsp_mode_params;
 struct modeset_params *default_mode_params;
 
-static int modprobe(const char *driver)
-{
-	return igt_kmod_load(driver, NULL);
-}
+/* TODO: FreeBSD - libkmod library */
+// static int modprobe(const char *driver)
+// {
+// 	return igt_kmod_load(driver, NULL);
+// }
 
 /* If the read fails, then the machine doesn't support PC8+ residencies. */
 static bool supports_pc8_plus_residencies(void)
@@ -2245,21 +2247,23 @@ igt_main_args("", long_options, help_str, opt_handler, NULL)
 	}
 
 	igt_subtest("module-reload") {
-		igt_debug("Reload w/o display\n");
-		igt_i915_driver_unload();
-
-		igt_kmsg(KMSG_INFO "Reloading i915 w/o display\n");
-		igt_assert_eq(igt_i915_driver_load("disable_display=1 mmio_debug=-1"), 0);
+/* TODO: FreeBSD - libkmod library */
+// 		igt_debug("Reload w/o display\n");
+// 		igt_i915_driver_unload();
+// 
+// 		igt_kmsg(KMSG_INFO "Reloading i915 w/o display\n");
+// 		igt_assert_eq(igt_i915_driver_load("disable_display=1 mmio_debug=-1"), 0);
 
 		igt_assert(setup_environment(false));
 		igt_assert(igt_wait(device_in_pci_d3(), 2000, 100));
 		teardown_environment(false);
 
-		igt_debug("Reload as normal\n");
-		igt_i915_driver_unload();
-
-		igt_kmsg(KMSG_INFO "Reloading i915 as normal\n");
-		igt_assert_eq(igt_i915_driver_load("mmio_debug=-1"), 0);
+/* TODO: FreeBSD - libkmod library */
+// 		igt_debug("Reload as normal\n");
+// 		igt_i915_driver_unload();
+// 
+// 		igt_kmsg(KMSG_INFO "Reloading i915 as normal\n");
+// 		igt_assert_eq(igt_i915_driver_load("mmio_debug=-1"), 0);
 
 		igt_assert(setup_environment(true));
 		igt_assert(igt_wait(device_in_pci_d3(), 2000, 100));
@@ -2268,6 +2272,7 @@ igt_main_args("", long_options, help_str, opt_handler, NULL)
 		teardown_environment(true);
 
 		/* Remove our mmio_debugging module */
-		igt_i915_driver_unload();
+/* TODO: FreeBSD - libkmod library */
+// 		igt_i915_driver_unload();
 	}
 }

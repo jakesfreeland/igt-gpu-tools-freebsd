@@ -22,7 +22,8 @@
  */
 
 #include "igt.h"
-#include "igt_kmod.h"
+/* TODO: FreeBSD - libkmod library */
+/* #include "igt_kmod.h" */
 #include "igt_vgem.h"
 #include "igt_debugfs.h"
 #include "igt_sysfs.h"
@@ -317,10 +318,11 @@ static void test_debugfs_read(int fd)
 	close(dir);
 }
 
-static int module_unload(void)
-{
-	return igt_kmod_unload("vgem", 0);
-}
+/* TODO: FreeBSD - libkmod library */
+// static int module_unload(void)
+// {
+// 	return igt_kmod_unload("vgem", 0);
+// }
 
 static void test_unload(void)
 {

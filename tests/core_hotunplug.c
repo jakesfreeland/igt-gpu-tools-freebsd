@@ -36,7 +36,8 @@
 #include "i915/perf.h"
 #include "igt.h"
 #include "igt_device_scan.h"
-#include "igt_kmod.h"
+/* TODO: FreeBSD - libkmod library */
+/* #include "igt_kmod.h" */
 #include "igt_sysfs.h"
 #include "sw_sync.h"
 
@@ -148,12 +149,13 @@ static void driver_unbind(struct hotunplug *priv, const char *prefix,
 	 * So, add a logic that unloads the audio driver before trying to
 	 * unbind i915 driver, reloading it when binding again.
 	 */
-	if (igt_audio_driver_unload(&priv->snd_driver)) {
-		igt_skip("Audio driver %s in use, skipping test\n",
-			 priv->snd_driver);
-	} else if (priv->snd_driver) {
-		igt_info("Unloaded audio driver %s\n", priv->snd_driver);
-	}
+/* TODO: FreeBSD - libkmod library */
+// 	if (igt_audio_driver_unload(&priv->snd_driver)) {
+// 		igt_skip("Audio driver %s in use, skipping test\n",
+// 			 priv->snd_driver);
+// 	} else if (priv->snd_driver) {
+// 		igt_info("Unloaded audio driver %s\n", priv->snd_driver);
+// 	}
 
 	local_debug("%sunbinding the driver from the device\n", prefix);
 	priv->failure = "Driver unbind failure!";
@@ -186,7 +188,8 @@ static void driver_bind(struct hotunplug *priv, int timeout)
 
 	if (priv->snd_driver) {
 		igt_info("Realoading %s\n", priv->snd_driver);
-		igt_kmod_load(priv->snd_driver, NULL);
+		/* TODO: FreeBSD - libkmod library */
+		/* igt_kmod_load(priv->snd_driver, NULL); */
 		priv->snd_driver = NULL;
 	}
 }

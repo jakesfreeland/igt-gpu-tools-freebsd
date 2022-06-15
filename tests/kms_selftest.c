@@ -21,12 +21,13 @@
  * IN THE SOFTWARE.
  */
 
-#include "igt.h"
-#include "igt_kmod.h"
-
-IGT_TEST_DESCRIPTION("Basic sanity check of KMS selftests.");
-
-igt_main
-{
-	igt_kselftests("test-drm_modeset", NULL, NULL, NULL);
-}
+/* TODO: FreeBSD - libkmod library */
+// #include "igt.h"
+// #include "igt_kmod.h"
+// 
+// IGT_TEST_DESCRIPTION("Basic sanity check of KMS selftests.");
+// 
+// igt_main
+// {
+// 	igt_kselftests("test-drm_modeset", NULL, NULL, NULL);
+// }

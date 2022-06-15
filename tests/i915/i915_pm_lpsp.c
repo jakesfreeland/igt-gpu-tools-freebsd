@@ -25,7 +25,8 @@
  */
 
 #include "igt.h"
-#include "igt_kmod.h"
+/* TODO: FreeBSD - libkmod library */
+/* #include "igt_kmod.h" */
 #include "igt_pm.h"
 #include "igt_sysfs.h"
 #include <sys/types.h>

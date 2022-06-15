@@ -11,7 +11,8 @@
 #include "igt.h"
 #include "igt_device_scan.h"
 #include "igt_sysfs.h"
-#include "igt_kmod.h"
+/* TODO: FreeBSD - libkmod library */
+/* #include "igt_kmod.h" */
 
 IGT_TEST_DESCRIPTION("Examine behavior of a driver on device sysfs reset");
 
@@ -98,10 +99,11 @@ static void init_device_fds(struct device_fds *dev)
 	if (is_i915_device(dev->fds.dev)) {
 		igt_require_gem(dev->fds.dev);
 
+		/* TODO: FreeBSD - libkmod library */
 		devid = intel_get_drm_devid(dev->fds.dev);
 		if ((IS_HASWELL(devid) || IS_BROADWELL(devid) ||
-		     IS_DG1(devid)) &&
-		     (igt_kmod_is_loaded("snd_hda_intel"))) {
+		     IS_DG1(devid)) /* &&
+		     (igt_kmod_is_loaded("snd_hda_intel")) */) {
 			igt_debug("Enable WA to unload snd driver\n");
 			dev->snd_unload = true;
 		}
@@ -194,15 +196,16 @@ static void driver_unbind(struct device_fds *dev)
 		/* unbind snd_hda_intel */
 		kick_snd_hda_intel();
 
-		if (igt_kmod_unload("snd_hda_intel", 0)) {
-			dev->snd_unload = false;
-			igt_warn("Could not unload snd_hda_intel\n");
-			igt_kmod_list_loaded();
-			igt_lsof("/dev/snd");
-			igt_skip("Audio is in use, skipping\n");
-		} else {
-			igt_info("Preventively unloaded snd_hda_intel\n");
-		}
+		/* TODO: FreeBSD - libkmod library */
+// 		if (igt_kmod_unload("snd_hda_intel", 0)) {
+// 			dev->snd_unload = false;
+// 			igt_warn("Could not unload snd_hda_intel\n");
+// 			igt_kmod_list_loaded();
+// 			igt_lsof("/dev/snd");
+// 			igt_skip("Audio is in use, skipping\n");
+// 		} else {
+// 			igt_info("Preventively unloaded snd_hda_intel\n");
+// 		}
 	}
 
 	igt_debug("unbind the driver from the device\n");
@@ -217,8 +220,9 @@ static void driver_bind(struct device_fds *dev)
 	igt_abort_on_f(!igt_sysfs_set(dev->fds.drv_dir, "bind",
 		       dev->dev_bus_addr), "driver rebind failed");
 
-	if (dev->snd_unload)
-		igt_kmod_load("snd_hda_intel", NULL);
+/* TODO: FreeBSD - libkmod library */
+// 	if (dev->snd_unload)
+// 		igt_kmod_load("snd_hda_intel", NULL);
 }
 
 /* Initiate device reset */

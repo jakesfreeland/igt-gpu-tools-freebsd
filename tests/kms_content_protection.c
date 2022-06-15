@@ -30,7 +30,8 @@
 #include "igt.h"
 #include "igt_sysfs.h"
 #include "igt_kms.h"
-#include "igt_kmod.h"
+/* TODO: FreeBSD - libkmod library */
+/* #include "igt_kmod.h" */
 
 IGT_TEST_DESCRIPTION("Test content protection (HDCP)");
 
@@ -353,16 +354,18 @@ static void test_content_protection_on_output(igt_output_t *output,
 						  true);
 		}
 
-		if (data.cp_tests & CP_MEI_RELOAD) {
-			igt_assert_f(!igt_kmod_unload("mei_hdcp", 0),
-				     "mei_hdcp unload failed");
+/* TODO: FreeBSD - libkmod library */
+// 		if (data.cp_tests & CP_MEI_RELOAD) {
+// 			igt_assert_f(!igt_kmod_unload("mei_hdcp", 0),
+// 				     "mei_hdcp unload failed");
 
 			/* Expected to fail */
 			test_cp_enable_with_retry(output, s, 3,
 						  content_type, true, false);
 
-			igt_assert_f(!igt_kmod_load("mei_hdcp", NULL),
-				     "mei_hdcp load failed");
+/* TODO: FreeBSD - libkmod library */
+// 			igt_assert_f(!igt_kmod_load("mei_hdcp", NULL),
+// 				     "mei_hdcp load failed");
 
 			/* Expected to pass */
 			test_cp_enable_with_retry(output, s, 3,
@@ -506,9 +509,10 @@ test_content_protection(enum igt_commit_style s, int content_type)
 	igt_output_t *output;
 	int valid_tests = 0;
 
-	if (data.cp_tests & CP_MEI_RELOAD)
-		igt_require_f(igt_kmod_is_loaded("mei_hdcp"),
-			      "mei_hdcp module is not loaded\n");
+/* TODO: FreeBSD - libkmod library */
+// 	if (data.cp_tests & CP_MEI_RELOAD)
+// 		igt_require_f(igt_kmod_is_loaded("mei_hdcp"),
+// 			      "mei_hdcp module is not loaded\n");
 
 	for_each_connected_output(display, output) {
 		if (!output_hdcp_capable(output, content_type))

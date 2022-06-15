@@ -21,28 +21,29 @@
  * IN THE SOFTWARE.
  */
 
-#include "igt.h"
-#include "igt_kmod.h"
-
-IGT_TEST_DESCRIPTION("Basic unit tests for i915.ko");
-
-igt_main
-{
-	const char *env = getenv("SELFTESTS") ?: "";
-	char opts[1024];
-
-	igt_assert(snprintf(opts, sizeof(opts),
-			    "mock_selftests=-1 disable_display=1 st_filter=%s",
-			    env) < sizeof(opts));
-	igt_kselftests("i915", opts, NULL, "mock");
-
-	igt_assert(snprintf(opts, sizeof(opts),
-			    "live_selftests=-1 disable_display=1 st_filter=%s",
-			    env) < sizeof(opts));
-	igt_kselftests("i915", opts, "live_selftests", "live");
-
-	igt_assert(snprintf(opts, sizeof(opts),
-			    "perf_selftests=-1 disable_display=1 st_filter=%s",
-			    env) < sizeof(opts));
-	igt_kselftests("i915", opts, "perf_selftests", "perf");
-}
+/* TODO: FreeBSD - libkmod library */
+// #include "igt.h"
+// #include "igt_kmod.h"
+// 
+// IGT_TEST_DESCRIPTION("Basic unit tests for i915.ko");
+// 
+// igt_main
+// {
+// 	const char *env = getenv("SELFTESTS") ?: "";
+// 	char opts[1024];
+// 
+// 	igt_assert(snprintf(opts, sizeof(opts),
+// 			    "mock_selftests=-1 disable_display=1 st_filter=%s",
+// 			    env) < sizeof(opts));
+// 	igt_kselftests("i915", opts, NULL, "mock");
+// 
+// 	igt_assert(snprintf(opts, sizeof(opts),
+// 			    "live_selftests=-1 disable_display=1 st_filter=%s",
+// 			    env) < sizeof(opts));
+// 	igt_kselftests("i915", opts, "live_selftests", "live");
+// 
+// 	igt_assert(snprintf(opts, sizeof(opts),
+// 			    "perf_selftests=-1 disable_display=1 st_filter=%s",
+// 			    env) < sizeof(opts));
+// 	igt_kselftests("i915", opts, "perf_selftests", "perf");
+// }

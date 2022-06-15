@@ -34,7 +34,7 @@
 #include "i915/gem_create.h"
 #include "igt_debugfs.h"
 #include "igt_aux.h"
-#include "igt_kmod.h"
+/* #include "igt_kmod.h" */
 #include "igt_sysfs.h"
 #include "igt_core.h"
 
@@ -172,11 +172,12 @@ inject_fault(const char *module_name, const char *opt, int fault)
 	igt_assert(fault > 0);
 	snprintf(buf, sizeof(buf), "%s=%d", opt, fault);
 
-	if (igt_kmod_load(module_name, buf)) {
-		igt_warn("Failed to load module '%s' with options '%s'\n",
-			 module_name, buf);
-		return 1;
-	}
+/* TODO: FreeBSD - libkmod library */
+// 	if (igt_kmod_load(module_name, buf)) {
+// 		igt_warn("Failed to load module '%s' with options '%s'\n",
+// 			 module_name, buf);
+// 		return 1;
+// 	}
 
 	dir = open_parameters(module_name);
 	igt_sysfs_scanf(dir, opt, "%d", &fault);
@@ -184,10 +185,11 @@ inject_fault(const char *module_name, const char *opt, int fault)
 
 	igt_debug("Loaded '%s %s', result=%d\n", module_name, buf, fault);
 
-	if (strcmp(module_name, "i915")) /* XXX better ideas! */
-		igt_kmod_unload(module_name, 0);
-	else
-		igt_i915_driver_unload();
+/* TODO: FreeBSD - libkmod library */
+// 	if (strcmp(module_name, "i915")) /* XXX better ideas! */
+// 		igt_kmod_unload(module_name, 0);
+// 	else
+// 		igt_i915_driver_unload();
 
 	return fault;
 }
@@ -239,11 +241,13 @@ hda_dynamic_debug(bool enable)
 
 static void load_and_check_i915(void)
 {
-	int error;
+/* TODO: FreeBSD - libkmod library */
+// 	int error;
 	int drm_fd;
 
 	hda_dynamic_debug(true);
-	error = igt_i915_driver_load(NULL);
+/* TODO: FreeBSD - libkmod library */
+// 	error = igt_i915_driver_load(NULL);
 	hda_dynamic_debug(false);
 
 	igt_assert_eq(error, 0);
@@ -272,53 +276,56 @@ igt_main
 			NULL
 		};
 
-		for (int i = 0; unwanted_drivers[i] != NULL; i++) {
-			igt_skip_on_f(igt_kmod_is_loaded(unwanted_drivers[i]),
-			              "%s is already loaded\n", unwanted_drivers[i]);
-		}
+/* TODO: FreeBSD - libkmod library */
+// 		for (int i = 0; unwanted_drivers[i] != NULL; i++) {
+// 			igt_skip_on_f(igt_kmod_is_loaded(unwanted_drivers[i]),
+// 			              "%s is already loaded\n", unwanted_drivers[i]);
+// 		}
 
 		load_and_check_i915();
 	}
 
-	igt_describe("Verify the basic functionality of i915 driver after it's reloaded.");
-	igt_subtest("reload") {
-		igt_i915_driver_unload();
+/* TODO: FreeBSD - libkmod library */
+// 	igt_describe("Verify the basic functionality of i915 driver after it's reloaded.");
+// 	igt_subtest("reload") {
+// 		igt_i915_driver_unload();
+// 
+// 		load_and_check_i915();
+// 
+// 		/* only default modparams, can leave module loaded */
+// 	}
+// 
+// 	igt_describe("Verify that i915 driver can be successfully loaded with disabled display.");
+// 	igt_subtest("reload-no-display") {
+// 		igt_i915_driver_unload();
+// 
+// 		igt_assert_eq(igt_i915_driver_load("disable_display=1"), 0);
+// 
+// 		igt_i915_driver_unload();
+// 	}
 
-		load_and_check_i915();
-
-		/* only default modparams, can leave module loaded */
-	}
-
-	igt_describe("Verify that i915 driver can be successfully loaded with disabled display.");
-	igt_subtest("reload-no-display") {
-		igt_i915_driver_unload();
-
-		igt_assert_eq(igt_i915_driver_load("disable_display=1"), 0);
-
-		igt_i915_driver_unload();
-	}
-
-	igt_describe("Verify that i915 driver can be successfully reloaded at least once"
-		     " with fault injection.");
-	igt_subtest("reload-with-fault-injection") {
-		const char *param;
-		int i = 0;
-
-		igt_i915_driver_unload();
-
-		param = "inject_probe_failure";
-		if (!igt_kmod_has_param("i915", param))
-			param = "inject_load_failure";
-		igt_require(igt_kmod_has_param("i915", param));
-
-		while (inject_fault("i915", param, ++i) == 0)
-			;
-
-		/* We expect to hit at least one fault! */
-		igt_assert(i > 1);
-
-		/* inject_fault() leaves the module unloaded */
-	}
+/* TODO: FreeBSD - libkmod library */
+// 	igt_describe("Verify that i915 driver can be successfully reloaded at least once"
+// 		     " with fault injection.");
+// 	igt_subtest("reload-with-fault-injection") {
+// 		const char *param;
+// 		int i = 0;
+// 
+// 		igt_i915_driver_unload();
+// 
+// 		param = "inject_probe_failure";
+// 		if (!igt_kmod_has_param("i915", param))
+// 			param = "inject_load_failure";
+// 		igt_require(igt_kmod_has_param("i915", param));
+// 
+// 		while (inject_fault("i915", param, ++i) == 0)
+// 			;
+// 
+// 		/* We expect to hit at least one fault! */
+// 		igt_assert(i > 1);
+// 
+// 		/* inject_fault() leaves the module unloaded */
+// 	}
 
 	/* Subtests should unload the module themselves if they use modparams */
 }

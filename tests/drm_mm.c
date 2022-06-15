@@ -21,12 +21,13 @@
  * IN THE SOFTWARE.
  */
 
-#include "igt.h"
-#include "igt_kmod.h"
-
-IGT_TEST_DESCRIPTION("Basic sanity check of DRM's range manager (struct drm_mm)");
-
-igt_main
-{
-	igt_kselftests("test-drm_mm", NULL, NULL, NULL);
-}
+/* TODO: FreeBSD - libkmod library */
+// #include "igt.h"
+// #include "igt_kmod.h"
+// 
+// IGT_TEST_DESCRIPTION("Basic sanity check of DRM's range manager (struct drm_mm)");
+// 
+// igt_main
+// {
+// 	igt_kselftests("test-drm_mm", NULL, NULL, NULL);
+// }

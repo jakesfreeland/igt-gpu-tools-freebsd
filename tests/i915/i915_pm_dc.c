@@ -28,7 +28,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "igt.h"
-#include "igt_kmod.h"
+/* TODO: FreeBSD - libkmod library */
+/* #include "igt_kmod.h" */
 #include "igt_psr.h"
 #include "igt_sysfs.h"
 #include "limits.h"
@@ -480,7 +481,8 @@ int main(int argc, char *argv[])
 		igt_require(igt_pm_dmc_loaded(data.debugfs_fd));
 		igt_display_require(&data.display, data.drm_fd);
 		/* Make sure our Kernel supports MSR and the module is loaded */
-		igt_require(igt_kmod_load("msr", NULL) == 0);
+		/* TODO: FreeBSD - libkmod library */
+		/* igt_require(igt_kmod_load("msr", NULL) == 0); */
 
 		data.msr_fd = open("/dev/cpu/0/msr", O_RDONLY);
 		igt_assert_f(data.msr_fd >= 0,

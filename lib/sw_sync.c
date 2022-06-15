@@ -36,7 +36,8 @@
 #include "sync_file.h"
 
 #include "igt_debugfs.h"
-#include "igt_kmod.h"
+/* TODO: FreeBSD - libkmod library */
+/* #include "igt_kmod.h" */
 #include "sw_sync.h"
 #include "drmtest.h"
 #include "ioctl_wrappers.h"
@@ -246,10 +247,11 @@ int sync_fence_status(int fence)
 	return info.status;
 }
 
-static void modprobe(const char *driver)
-{
-	igt_kmod_load(driver, NULL);
-}
+/* TODO: FreeBSD - libkmod library */
+// static void modprobe(const char *driver)
+// {
+// 	igt_kmod_load(driver, NULL);
+// }
 
 static bool kernel_has_sw_sync(void)
 {

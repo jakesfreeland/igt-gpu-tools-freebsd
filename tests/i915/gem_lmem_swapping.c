@@ -8,7 +8,8 @@
 #include "i915/gem_vm.h"
 #include "i915/intel_memory_region.h"
 #include "igt.h"
-#include "igt_kmod.h"
+/* TODO: FreeBSD - libkmod library */
+/* #include "igt_kmod.h" */
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -764,16 +765,17 @@ igt_main_args("", long_options, help_str, opt_handler, NULL)
 		 * lmem before unloading to prevent a needless
 		 * unload-load cycle on integrated platforms.
 		 */
-		if (igt_kmod_is_loaded("i915")) {
-			i915 = __drm_open_driver(DRIVER_INTEL);
-			igt_require_fd(i915);
-			igt_require_gem(i915);
-			igt_require(gem_has_lmem(i915));
-			close(i915);
-		}
-
-		igt_i915_driver_unload();
-		igt_assert_eq(igt_i915_driver_load("lmem_size=4096"), 0);
+/* TODO: FreeBSD - libkmod library */
+// 		if (igt_kmod_is_loaded("i915")) {
+// 			i915 = __drm_open_driver(DRIVER_INTEL);
+// 			igt_require_fd(i915);
+// 			igt_require_gem(i915);
+// 			igt_require(gem_has_lmem(i915));
+// 			close(i915);
+// 		}
+// 
+// 		igt_i915_driver_unload();
+// 		igt_assert_eq(igt_i915_driver_load("lmem_size=4096"), 0);
 
 		i915 = __drm_open_driver(DRIVER_INTEL);
 		igt_require_fd(i915);
@@ -815,7 +817,8 @@ igt_main_args("", long_options, help_str, opt_handler, NULL)
 		intel_ctx_destroy(i915, ctx);
 		free(regions);
 		close(i915);
-		igt_i915_driver_unload();
+		/* TODO: FreeBSD - libkmod library */
+		/* igt_i915_driver_unload(); */
 	}
 
 	igt_exit();

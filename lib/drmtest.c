@@ -54,7 +54,8 @@
 #include "igt_debugfs.h"
 #include "igt_device.h"
 #include "igt_gt.h"
-#include "igt_kmod.h"
+/* TODO: FreeBSD - libkmod library */
+/* #include "igt_kmod.h" */
 #include "igt_params.h"
 #include "igt_sysfs.h"
 #include "igt_device_scan.h"
@@ -166,16 +167,18 @@ static const char *forced_driver(void)
 	return NULL;
 }
 
-static int modprobe(const char *driver)
-{
-	return igt_kmod_load(driver, "");
-}
+/* TODO: FreeBSD - libkmod library */
+// static int modprobe(const char *driver)
+// {
+// 	return igt_kmod_load(driver, "");
+// }
 
-static void modprobe_i915(const char *name)
-{
-	/* When loading i915, we also want to load snd-hda et al */
-	igt_i915_driver_load(NULL);
-}
+/* TODO: FreeBSD - libkmod library */
+// static void modprobe_i915(const char *name)
+// {
+// 	/* When loading i915, we also want to load snd-hda et al */
+// 	igt_i915_driver_load(NULL);
+// }
 
 static const struct module {
 	unsigned int bit;

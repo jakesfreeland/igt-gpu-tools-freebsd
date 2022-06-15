@@ -41,7 +41,8 @@
 #include "i915/gem.h"
 #include "i915/gem_create.h"
 #include "igt.h"
-#include "igt_kmod.h"
+/* TODO: FreeBSD - libkmod library */
+/* #include "igt_kmod.h" */
 #include "igt_device.h"
 
 #define OBJECT_SIZE (16*1024*1024)
@@ -206,15 +207,17 @@ test_forcewake(int fd, bool hibernate)
 static void
 test_suspend_without_i915(int state)
 {
-	igt_kmsg(KMSG_INFO "Unloading i915\n");
-	igt_assert_eq(igt_i915_driver_unload(),0);
+/* TODO: FreeBSD - libkmod library */
+// 	igt_kmsg(KMSG_INFO "Unloading i915\n");
+// 	igt_assert_eq(igt_i915_driver_unload(),0);
 
 	igt_skip_on_f(igt_get_memsleep_state() == MEM_SLEEP_FREEZE && state > SUSPEND_STATE_FREEZE,
 		      "Platform default mem_sleep state is s2idle\n");
 	igt_system_suspend_autoresume(state, SUSPEND_TEST_NONE);
 
-	igt_kmsg(KMSG_INFO "Re-loading i915 \n");
-	igt_assert_eq(igt_i915_driver_load(NULL), 0);
+/* TODO: FreeBSD - libkmod library */
+// 	igt_kmsg(KMSG_INFO "Re-loading i915 \n");
+// 	igt_assert_eq(igt_i915_driver_load(NULL), 0);
 }
 
 int fd;
