@@ -52,7 +52,8 @@
 #include <assert.h>
 #include <grp.h>
 
-#include <proc/readproc.h>
+/* TODO: FreeBSD - libprocps library */
+/* #include <proc/readproc.h> */
 #include <libudev.h>
 
 #include "drmtest.h"
@@ -1189,27 +1190,27 @@ void igt_unlock_mem(void)
  * This function checks in the process table for an entry with the name @comm.
  */
 /* TODO: FreeBSD - libprocps library */
-int igt_is_process_running(const char *comm)
-{
-	PROCTAB *proc;
-	proc_t *proc_info;
-	bool found = false;
-
-	proc = openproc(PROC_FILLCOM | PROC_FILLSTAT);
-	igt_assert(proc != NULL);
-
-	while ((proc_info = readproc(proc, NULL))) {
-		if (!strncasecmp(proc_info->cmd, comm, sizeof(proc_info->cmd))) {
-			freeproc(proc_info);
-			found = true;
-			break;
-		}
-		freeproc(proc_info);
-	}
-
-	closeproc(proc);
-	return found;
-}
+// int igt_is_process_running(const char *comm)
+// {
+// 	PROCTAB *proc;
+// 	proc_t *proc_info;
+// 	bool found = false;
+// 
+// 	proc = openproc(PROC_FILLCOM | PROC_FILLSTAT);
+// 	igt_assert(proc != NULL);
+// 
+// 	while ((proc_info = readproc(proc, NULL))) {
+// 		if (!strncasecmp(proc_info->cmd, comm, sizeof(proc_info->cmd))) {
+// 			freeproc(proc_info);
+// 			found = true;
+// 			break;
+// 		}
+// 		freeproc(proc_info);
+// 	}
+// 
+// 	closeproc(proc);
+// 	return found;
+// }
 
 /**
  * igt_terminate_process:
@@ -1224,30 +1225,30 @@ int igt_is_process_running(const char *comm)
  * with name @comm.
  */
 /* TODO: FreeBSD - libprocps library */
-int igt_terminate_process(int sig, const char *comm)
-{
-	PROCTAB *proc;
-	proc_t *proc_info;
-	int err = 0;
-
-	proc = openproc(PROC_FILLCOM | PROC_FILLSTAT | PROC_FILLARG);
-	igt_assert(proc != NULL);
-
-	while ((proc_info = readproc(proc, NULL))) {
-		if (!strncasecmp(proc_info->cmd, comm, sizeof(proc_info->cmd))) {
-
-			if (kill(proc_info->tid, sig) < 0)
-				err = -errno;
-
-			freeproc(proc_info);
-			break;
-		}
-		freeproc(proc_info);
-	}
-
-	closeproc(proc);
-	return err;
-}
+// int igt_terminate_process(int sig, const char *comm)
+// {
+// 	PROCTAB *proc;
+// 	proc_t *proc_info;
+// 	int err = 0;
+// 
+// 	proc = openproc(PROC_FILLCOM | PROC_FILLSTAT | PROC_FILLARG);
+// 	igt_assert(proc != NULL);
+// 
+// 	while ((proc_info = readproc(proc, NULL))) {
+// 		if (!strncasecmp(proc_info->cmd, comm, sizeof(proc_info->cmd))) {
+// 
+// 			if (kill(proc_info->tid, sig) < 0)
+// 				err = -errno;
+// 
+// 			freeproc(proc_info);
+// 			break;
+// 		}
+// 		freeproc(proc_info);
+// 	}
+// 
+// 	closeproc(proc);
+// 	return err;
+// }
 
 struct pinfo {
 	pid_t pid;
@@ -1389,50 +1390,50 @@ again:
  * current working directory or the fds matches the one supplied in dir.
  */
 /* TODO: FreeBSD - libprocps library */
-static void
-__igt_lsof(const char *dir)
-{
-	PROCTAB *proc;
-	proc_t *proc_info;
-
-	char path[30];
-	char *name_lnk;
-	struct stat st;
-	int state = 0;
-
-	proc = openproc(PROC_FILLCOM | PROC_FILLSTAT | PROC_FILLARG);
-	igt_assert(proc != NULL);
-
-	while ((proc_info = readproc(proc, NULL))) {
-		ssize_t read;
-
-		/* check current working directory */
-		memset(path, 0, sizeof(path));
-		snprintf(path, sizeof(path), "/proc/%d/cwd", proc_info->tid);
-
-		if (stat(path, &st) == -1)
-			continue;
-
-		name_lnk = malloc(st.st_size + 1);
-
-		igt_assert((read = readlink(path, name_lnk, st.st_size + 1)));
-		name_lnk[read] = '\0';
-
-		if (!strncmp(dir, name_lnk, strlen(dir)))
-			igt_show_stat(proc_info, &state, name_lnk);
-
-		/* check also fd, seems that lsof(8) doesn't look here */
-		memset(path, 0, sizeof(path));
-		snprintf(path, sizeof(path), "/proc/%d/fd", proc_info->tid);
-
-		__igt_lsof_fds(proc_info, &state, path, dir);
-
-		free(name_lnk);
-		freeproc(proc_info);
-	}
-
-	closeproc(proc);
-}
+// static void
+// __igt_lsof(const char *dir)
+// {
+// 	PROCTAB *proc;
+// 	proc_t *proc_info;
+// 
+// 	char path[30];
+// 	char *name_lnk;
+// 	struct stat st;
+// 	int state = 0;
+// 
+// 	proc = openproc(PROC_FILLCOM | PROC_FILLSTAT | PROC_FILLARG);
+// 	igt_assert(proc != NULL);
+// 
+// 	while ((proc_info = readproc(proc, NULL))) {
+// 		ssize_t read;
+// 
+// 		/* check current working directory */
+// 		memset(path, 0, sizeof(path));
+// 		snprintf(path, sizeof(path), "/proc/%d/cwd", proc_info->tid);
+// 
+// 		if (stat(path, &st) == -1)
+// 			continue;
+// 
+// 		name_lnk = malloc(st.st_size + 1);
+// 
+// 		igt_assert((read = readlink(path, name_lnk, st.st_size + 1)));
+// 		name_lnk[read] = '\0';
+// 
+// 		if (!strncmp(dir, name_lnk, strlen(dir)))
+// 			igt_show_stat(proc_info, &state, name_lnk);
+// 
+// 		/* check also fd, seems that lsof(8) doesn't look here */
+// 		memset(path, 0, sizeof(path));
+// 		snprintf(path, sizeof(path), "/proc/%d/fd", proc_info->tid);
+// 
+// 		__igt_lsof_fds(proc_info, &state, path, dir);
+// 
+// 		free(name_lnk);
+// 		freeproc(proc_info);
+// 	}
+// 
+// 	closeproc(proc);
+// }
 
 /**
  * igt_lsof: Lists information about files opened by processes.
@@ -1467,133 +1468,133 @@ igt_lsof(const char *dpath)
 }
 
 /* TODO: FreeBSD - libprocps library */
-static void pulseaudio_unload_module(proc_t *proc_info)
-{
-	struct igt_helper_process pa_proc = {};
-	char xdg_dir[PATH_MAX];
-	const char *homedir;
-	struct passwd *pw;
-
-	igt_fork_helper(&pa_proc) {
-		pw = getpwuid(proc_info->euid);
-		homedir = pw->pw_dir;
-		snprintf(xdg_dir, sizeof(xdg_dir), "/run/user/%d", proc_info->euid);
-
-		igt_info("Request pulseaudio to stop using audio device\n");
-
-		setgid(proc_info->egid);
-		setuid(proc_info->euid);
-		clearenv();
-		setenv("HOME", homedir, 1);
-		setenv("XDG_RUNTIME_DIR",xdg_dir, 1);
-
-		system("for i in $(pacmd list-sources|grep module:|cut -d : -f 2); do pactl unload-module $i; done");
-	}
-	igt_wait_helper(&pa_proc);
-}
+// static void pulseaudio_unload_module(proc_t *proc_info)
+// {
+// 	struct igt_helper_process pa_proc = {};
+// 	char xdg_dir[PATH_MAX];
+// 	const char *homedir;
+// 	struct passwd *pw;
+// 
+// 	igt_fork_helper(&pa_proc) {
+// 		pw = getpwuid(proc_info->euid);
+// 		homedir = pw->pw_dir;
+// 		snprintf(xdg_dir, sizeof(xdg_dir), "/run/user/%d", proc_info->euid);
+// 
+// 		igt_info("Request pulseaudio to stop using audio device\n");
+// 
+// 		setgid(proc_info->egid);
+// 		setuid(proc_info->euid);
+// 		clearenv();
+// 		setenv("HOME", homedir, 1);
+// 		setenv("XDG_RUNTIME_DIR",xdg_dir, 1);
+// 
+// 		system("for i in $(pacmd list-sources|grep module:|cut -d : -f 2); do pactl unload-module $i; done");
+// 	}
+// 	igt_wait_helper(&pa_proc);
+// }
 
 static int pipewire_pulse_pid = 0;
 static int pipewire_pw_reserve_pid = 0;
 static struct igt_helper_process pw_reserve_proc = {};
 
 /* TODO: FreeBSD - libprocps library */
-static void pipewire_reserve_wait(void)
-{
-	char xdg_dir[PATH_MAX];
-	const char *homedir;
-	struct passwd *pw;
-	proc_t *proc_info;
-	PROCTAB *proc;
-
-	igt_fork_helper(&pw_reserve_proc) {
-		igt_info("Preventing pipewire-pulse to use the audio drivers\n");
-
-		proc = openproc(PROC_FILLCOM | PROC_FILLSTAT | PROC_FILLARG);
-		igt_assert(proc != NULL);
-
-		while ((proc_info = readproc(proc, NULL))) {
-			if (pipewire_pulse_pid == proc_info->tid)
-				break;
-			freeproc(proc_info);
-		}
-		closeproc(proc);
-
-		/* Sanity check: if it can't find the process, it means it has gone */
-		if (pipewire_pulse_pid != proc_info->tid)
-			exit(0);
-
-		pw = getpwuid(proc_info->euid);
-		homedir = pw->pw_dir;
-		snprintf(xdg_dir, sizeof(xdg_dir), "/run/user/%d", proc_info->euid);
-		setgid(proc_info->egid);
-		setuid(proc_info->euid);
-		clearenv();
-		setenv("HOME", homedir, 1);
-		setenv("XDG_RUNTIME_DIR",xdg_dir, 1);
-		freeproc(proc_info);
-
-		/*
-		 * pw-reserve will run in background. It will only exit when
-		 * igt_kill_children() is called later on. So, it shouldn't
-		 * call igt_waitchildren(). Instead, just exit with the return
-		 * code from pw-reserve.
-		 */
-		exit(system("pw-reserve -n Audio0 -r"));
-	}
-}
+// static void pipewire_reserve_wait(void)
+// {
+// 	char xdg_dir[PATH_MAX];
+// 	const char *homedir;
+// 	struct passwd *pw;
+// 	proc_t *proc_info;
+// 	PROCTAB *proc;
+// 
+// 	igt_fork_helper(&pw_reserve_proc) {
+// 		igt_info("Preventing pipewire-pulse to use the audio drivers\n");
+// 
+// 		proc = openproc(PROC_FILLCOM | PROC_FILLSTAT | PROC_FILLARG);
+// 		igt_assert(proc != NULL);
+// 
+// 		while ((proc_info = readproc(proc, NULL))) {
+// 			if (pipewire_pulse_pid == proc_info->tid)
+// 				break;
+// 			freeproc(proc_info);
+// 		}
+// 		closeproc(proc);
+// 
+// 		/* Sanity check: if it can't find the process, it means it has gone */
+// 		if (pipewire_pulse_pid != proc_info->tid)
+// 			exit(0);
+// 
+// 		pw = getpwuid(proc_info->euid);
+// 		homedir = pw->pw_dir;
+// 		snprintf(xdg_dir, sizeof(xdg_dir), "/run/user/%d", proc_info->euid);
+// 		setgid(proc_info->egid);
+// 		setuid(proc_info->euid);
+// 		clearenv();
+// 		setenv("HOME", homedir, 1);
+// 		setenv("XDG_RUNTIME_DIR",xdg_dir, 1);
+// 		freeproc(proc_info);
+// 
+// 		/*
+// 		 * pw-reserve will run in background. It will only exit when
+// 		 * igt_kill_children() is called later on. So, it shouldn't
+// 		 * call igt_waitchildren(). Instead, just exit with the return
+// 		 * code from pw-reserve.
+// 		 */
+// 		exit(system("pw-reserve -n Audio0 -r"));
+// 	}
+// }
 
 /* Maximum time waiting for pw-reserve to start running */
 #define PIPEWIRE_RESERVE_MAX_TIME 1000 /* milisseconds */
 
 /* TODO: FreeBSD - libprocps library */
-int pipewire_pulse_start_reserve(void)
-{
-	bool is_pw_reserve_running = false;
-	proc_t *proc_info;
-	int attempts = 0;
-	PROCTAB *proc;
-
-	if (!pipewire_pulse_pid)
-		return 0;
-
-	pipewire_reserve_wait();
-
-	/*
-	 * Note: using pw-reserve to stop using audio only works with
-	 * pipewire version 0.3.50 or upper.
-	 */
-	for (attempts = 0; attempts < PIPEWIRE_RESERVE_MAX_TIME; attempts++) {
-		usleep(1000);
-		proc = openproc(PROC_FILLCOM | PROC_FILLSTAT | PROC_FILLARG);
-		igt_assert(proc != NULL);
-
-		while ((proc_info = readproc(proc, NULL))) {
-			if (!strcmp(proc_info->cmd, "pw-reserve")) {
-				is_pw_reserve_running = true;
-				pipewire_pw_reserve_pid = proc_info->tid;
-				freeproc(proc_info);
-				break;
-			}
-			freeproc(proc_info);
-		}
-		closeproc(proc);
-		if (is_pw_reserve_running)
-			break;
-	}
-	if (!is_pw_reserve_running) {
-		igt_warn("Failed to remove audio drivers from pipewire\n");
-		return 1;
-	}
-	/* Let's grant some time for pw_reserve to notify pipewire via D-BUS */
-	usleep(50000);
-
-	/*
-	 * pw-reserve is running, and should have stopped using the audio
-	 * drivers. We can now remove the driver.
-	 */
-
-	return 0;
-}
+// int pipewire_pulse_start_reserve(void)
+// {
+// 	bool is_pw_reserve_running = false;
+// 	proc_t *proc_info;
+// 	int attempts = 0;
+// 	PROCTAB *proc;
+// 
+// 	if (!pipewire_pulse_pid)
+// 		return 0;
+// 
+// 	pipewire_reserve_wait();
+// 
+// 	/*
+// 	 * Note: using pw-reserve to stop using audio only works with
+// 	 * pipewire version 0.3.50 or upper.
+// 	 */
+// 	for (attempts = 0; attempts < PIPEWIRE_RESERVE_MAX_TIME; attempts++) {
+// 		usleep(1000);
+// 		proc = openproc(PROC_FILLCOM | PROC_FILLSTAT | PROC_FILLARG);
+// 		igt_assert(proc != NULL);
+// 
+// 		while ((proc_info = readproc(proc, NULL))) {
+// 			if (!strcmp(proc_info->cmd, "pw-reserve")) {
+// 				is_pw_reserve_running = true;
+// 				pipewire_pw_reserve_pid = proc_info->tid;
+// 				freeproc(proc_info);
+// 				break;
+// 			}
+// 			freeproc(proc_info);
+// 		}
+// 		closeproc(proc);
+// 		if (is_pw_reserve_running)
+// 			break;
+// 	}
+// 	if (!is_pw_reserve_running) {
+// 		igt_warn("Failed to remove audio drivers from pipewire\n");
+// 		return 1;
+// 	}
+// 	/* Let's grant some time for pw_reserve to notify pipewire via D-BUS */
+// 	usleep(50000);
+// 
+// 	/*
+// 	 * pw-reserve is running, and should have stopped using the audio
+// 	 * drivers. We can now remove the driver.
+// 	 */
+// 
+// 	return 0;
+// }
 
 void pipewire_pulse_stop_reserve(void)
 {
@@ -1624,108 +1625,108 @@ void pipewire_pulse_stop_reserve(void)
  * If the check fails, it means that the process can simply be killed.
  */
 /* TODO: FreeBSD - libprocps library */
-static int
-__igt_lsof_audio_and_kill_proc(proc_t *proc_info, char *proc_path)
-{
-	const char *audio_dev = "/dev/snd/";
-	char path[PATH_MAX * 2];
-	struct dirent *d;
-	struct stat st;
-	char *fd_lnk;
-	int fail = 0;
-	ssize_t read;
-	DIR *dp;
-
-	/*
-	 * Terminating pipewire-pulse require an special procedure, which
-	 * is only available at version 0.3.50 and upper. Just trying to
-	 * kill pipewire will start a race between IGT and systemd. If IGT
-	 * wins, the audio driver will be unloaded before systemd tries to
-	 * reload it, but if systemd wins, the audio device will be re-opened
-	 * and used before IGT has a chance to remove the audio driver.
-	 * Pipewire version 0.3.50 should bring a standard way:
-	 *
-	 * 1) start a thread running:
-	 *	 pw-reserve -n Audio0 -r
-	 * 2) unload/unbind the the audio driver(s);
-	 * 3) stop the pw-reserve thread.
-	 */
-	if (!strcmp(proc_info->cmd, "pipewire-pulse")) {
-		igt_info("process %d (%s) is using audio device. Should be requested to stop using them.\n",
-			 proc_info->tid, proc_info->cmd);
-		pipewire_pulse_pid = proc_info->tid;
-		return 0;
-	}
-	/*
-	 * pipewire-pulse itself doesn't hook into a /dev/snd device. Instead,
-	 * the actual binding happens at the Pipewire Session Manager, e.g.
-	 * either wireplumber or pipewire media-session.
-	 *
-	 * Just killing such processes won't produce any effect, as systemd
-	 * will respawn them. So, just ignore here, they'll honor pw-reserve,
-	 * when the time comes.
-	 */
-	if (!strcmp(proc_info->cmd, "pipewire-media-session"))
-		return 0;
-	if (!strcmp(proc_info->cmd, "wireplumber"))
-		return 0;
-
-	dp = opendir(proc_path);
-	igt_assert(dp);
-
-	while ((d = readdir(dp))) {
-		if (*d->d_name == '.')
-			continue;
-
-		memset(path, 0, sizeof(path));
-		snprintf(path, sizeof(path), "%s/%s", proc_path, d->d_name);
-
-		if (lstat(path, &st) == -1)
-			continue;
-
-		fd_lnk = malloc(st.st_size + 1);
-
-		igt_assert((read = readlink(path, fd_lnk, st.st_size + 1)));
-		fd_lnk[read] = '\0';
-
-		if (strncmp(audio_dev, fd_lnk, strlen(audio_dev))) {
-			free(fd_lnk);
-			continue;
-		}
-
-		free(fd_lnk);
-
-		/*
-		 * In order to avoid racing against pa/systemd, ensure that
-		 * pulseaudio will close all audio files. This should be
-		 * enough to unbind audio modules and won't cause race issues
-		 * with systemd trying to reload it.
-		 */
-		if (!strcmp(proc_info->cmd, "pulseaudio")) {
-			pulseaudio_unload_module(proc_info);
-			break;
-		}
-
-		/* For all other processes, just kill them */
-		igt_info("process %d (%s) is using audio device. Should be terminated.\n",
-				proc_info->tid, proc_info->cmd);
-
-		if (kill(proc_info->tid, SIGTERM) < 0) {
-			igt_info("Fail to terminate %s (pid: %d) with SIGTERM\n",
-				proc_info->cmd, proc_info->tid);
-			if (kill(proc_info->tid, SIGABRT) < 0) {
-				fail++;
-				igt_info("Fail to terminate %s (pid: %d) with SIGABRT\n",
-					proc_info->cmd, proc_info->tid);
-			}
-		}
-
-		break;
-	}
-
-	closedir(dp);
-	return fail;
-}
+// static int
+// __igt_lsof_audio_and_kill_proc(proc_t *proc_info, char *proc_path)
+// {
+// 	const char *audio_dev = "/dev/snd/";
+// 	char path[PATH_MAX * 2];
+// 	struct dirent *d;
+// 	struct stat st;
+// 	char *fd_lnk;
+// 	int fail = 0;
+// 	ssize_t read;
+// 	DIR *dp;
+// 
+// 	/*
+// 	 * Terminating pipewire-pulse require an special procedure, which
+// 	 * is only available at version 0.3.50 and upper. Just trying to
+// 	 * kill pipewire will start a race between IGT and systemd. If IGT
+// 	 * wins, the audio driver will be unloaded before systemd tries to
+// 	 * reload it, but if systemd wins, the audio device will be re-opened
+// 	 * and used before IGT has a chance to remove the audio driver.
+// 	 * Pipewire version 0.3.50 should bring a standard way:
+// 	 *
+// 	 * 1) start a thread running:
+// 	 *	 pw-reserve -n Audio0 -r
+// 	 * 2) unload/unbind the the audio driver(s);
+// 	 * 3) stop the pw-reserve thread.
+// 	 */
+// 	if (!strcmp(proc_info->cmd, "pipewire-pulse")) {
+// 		igt_info("process %d (%s) is using audio device. Should be requested to stop using them.\n",
+// 			 proc_info->tid, proc_info->cmd);
+// 		pipewire_pulse_pid = proc_info->tid;
+// 		return 0;
+// 	}
+// 	/*
+// 	 * pipewire-pulse itself doesn't hook into a /dev/snd device. Instead,
+// 	 * the actual binding happens at the Pipewire Session Manager, e.g.
+// 	 * either wireplumber or pipewire media-session.
+// 	 *
+// 	 * Just killing such processes won't produce any effect, as systemd
+// 	 * will respawn them. So, just ignore here, they'll honor pw-reserve,
+// 	 * when the time comes.
+// 	 */
+// 	if (!strcmp(proc_info->cmd, "pipewire-media-session"))
+// 		return 0;
+// 	if (!strcmp(proc_info->cmd, "wireplumber"))
+// 		return 0;
+// 
+// 	dp = opendir(proc_path);
+// 	igt_assert(dp);
+// 
+// 	while ((d = readdir(dp))) {
+// 		if (*d->d_name == '.')
+// 			continue;
+// 
+// 		memset(path, 0, sizeof(path));
+// 		snprintf(path, sizeof(path), "%s/%s", proc_path, d->d_name);
+// 
+// 		if (lstat(path, &st) == -1)
+// 			continue;
+// 
+// 		fd_lnk = malloc(st.st_size + 1);
+// 
+// 		igt_assert((read = readlink(path, fd_lnk, st.st_size + 1)));
+// 		fd_lnk[read] = '\0';
+// 
+// 		if (strncmp(audio_dev, fd_lnk, strlen(audio_dev))) {
+// 			free(fd_lnk);
+// 			continue;
+// 		}
+// 
+// 		free(fd_lnk);
+// 
+// 		/*
+// 		 * In order to avoid racing against pa/systemd, ensure that
+// 		 * pulseaudio will close all audio files. This should be
+// 		 * enough to unbind audio modules and won't cause race issues
+// 		 * with systemd trying to reload it.
+// 		 */
+// 		if (!strcmp(proc_info->cmd, "pulseaudio")) {
+// 			pulseaudio_unload_module(proc_info);
+// 			break;
+// 		}
+// 
+// 		/* For all other processes, just kill them */
+// 		igt_info("process %d (%s) is using audio device. Should be terminated.\n",
+// 				proc_info->tid, proc_info->cmd);
+// 
+// 		if (kill(proc_info->tid, SIGTERM) < 0) {
+// 			igt_info("Fail to terminate %s (pid: %d) with SIGTERM\n",
+// 				proc_info->cmd, proc_info->tid);
+// 			if (kill(proc_info->tid, SIGABRT) < 0) {
+// 				fail++;
+// 				igt_info("Fail to terminate %s (pid: %d) with SIGABRT\n",
+// 					proc_info->cmd, proc_info->tid);
+// 			}
+// 		}
+// 
+// 		break;
+// 	}
+// 
+// 	closedir(dp);
+// 	return fail;
+// }
 
 /*
  * This function identifies each process running on the machine that is
@@ -1735,30 +1736,30 @@ __igt_lsof_audio_and_kill_proc(proc_t *proc_info, char *proc_path)
  * daemons are respanned if they got killed.
  */
 /* TODO: FreeBSD - libprocps library */
-int
-igt_lsof_kill_audio_processes(void)
-{
-	char path[PATH_MAX];
-	proc_t *proc_info;
-	PROCTAB *proc;
-	int fail = 0;
-
-	proc = openproc(PROC_FILLCOM | PROC_FILLSTAT | PROC_FILLARG);
-	igt_assert(proc != NULL);
-	pipewire_pulse_pid = 0;
-
-	while ((proc_info = readproc(proc, NULL))) {
-		if (snprintf(path, sizeof(path), "/proc/%d/fd", proc_info->tid) < 1)
-			fail++;
-		else
-			fail += __igt_lsof_audio_and_kill_proc(proc_info, path);
-
-		freeproc(proc_info);
-	}
-	closeproc(proc);
-
-	return fail;
-}
+// int
+// igt_lsof_kill_audio_processes(void)
+// {
+// 	char path[PATH_MAX];
+// 	proc_t *proc_info;
+// 	PROCTAB *proc;
+// 	int fail = 0;
+// 
+// 	proc = openproc(PROC_FILLCOM | PROC_FILLSTAT | PROC_FILLARG);
+// 	igt_assert(proc != NULL);
+// 	pipewire_pulse_pid = 0;
+// 
+// 	while ((proc_info = readproc(proc, NULL))) {
+// 		if (snprintf(path, sizeof(path), "/proc/%d/fd", proc_info->tid) < 1)
+// 			fail++;
+// 		else
+// 			fail += __igt_lsof_audio_and_kill_proc(proc_info, path);
+// 
+// 		freeproc(proc_info);
+// 	}
+// 	closeproc(proc);
+// 
+// 	return fail;
+// }
 
 static struct igt_siglatency {
 	timer_t timer;
