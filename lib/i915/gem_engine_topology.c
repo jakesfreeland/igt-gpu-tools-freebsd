@@ -611,12 +611,14 @@ void dyn_sysfs_engines(int i915, int engines, const char *file,
 	int len;
 
 	lseek(engines, 0, SEEK_SET);
-	while ((len = syscall(SYS_getdents64, engines, buf, sizeof(buf))) > 0) {
+	/* while ((len = syscall(SYS_getdents64, engines, buf, sizeof(buf))) > 0) { */
+	while ((len = syscall(SYS_freebsd11_getdents, engines, buf, sizeof(buf))) > 0) {
 		void *ptr = buf;
 
 		while (len) {
 			struct linux_dirent64 {
-				ino64_t        d_ino;
+		 /* ino64_t        d_ino; */
+				ino_t          d_ino;
 				off64_t        d_off;
 				unsigned short d_reclen;
 				unsigned char  d_type;
