@@ -617,7 +617,7 @@ void dyn_sysfs_engines(int i915, int engines, const char *file,
 
 		while (len) {
 			struct linux_dirent64 {
-		 /* ino64_t        d_ino; */
+     /* ino64_t        d_ino; */
 				ino_t          d_ino;
 				off64_t        d_off;
 				unsigned short d_reclen;
