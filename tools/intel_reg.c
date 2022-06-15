@@ -57,7 +57,7 @@ static inline int _not_supported(void)
 #endif /* HAVE_SYS_IO_H */
 
 #ifdef __FreeBSD__
-/* TODO: is cpufunc.h meant to be included directly? */
+/* TODO: FreeBSD - is cpufunc.h meant to be included directly? */
 #include <machine/cpufunc.h>
 #include <fcntl.h>
 

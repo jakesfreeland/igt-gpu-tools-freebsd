@@ -2,7 +2,11 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <glib.h>
+#if defined(__linux__)
 #include <linux/watchdog.h>
+#elif defined(__FreeBSD__)
+#include <sys/watchdog.h>
+#endif
 #if HAVE_OPING
 #include <oping.h>
 #endif

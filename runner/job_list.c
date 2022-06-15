@@ -1,7 +1,11 @@
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
+#if defined(__linux__)
 #include <linux/limits.h>
+#elif defined(__FreeBSD__)
+#include <sys/limits.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

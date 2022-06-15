@@ -25,7 +25,8 @@
  *
  */
 
-#include <linux/userfaultfd.h>
+/* TODO: FreeBSD - USERFAULTFD */
+/* #include <linux/userfaultfd.h> */
 
 #include "igt.h"
 #include <unistd.h>
@@ -152,76 +153,77 @@ static void unlimited_processes(unsigned int limit)
 	setrlimit(RLIMIT_NPROC, &rlim);
 }
 
-static void test_exhaustion(int i915)
-{
-	struct uffdio_api api = { .api = UFFD_API };
-	struct uffdio_register reg;
-	struct uffdio_copy copy;
-	struct ufd_thread t = {
-		.i915 = i915,
-		.vgem = drm_open_driver(DRIVER_VGEM),
-	};
-	pthread_t *thread = NULL;
-	struct uffd_msg msg;
-	unsigned long count;
-	char buf[4096];
-	int ufd;
-
-	unlimited_processes(1024 * 1024);
-
-	ufd = userfaultfd(0);
-	igt_require_f(ufd != -1, "kernel support for userfaultfd\n");
-	igt_require_f(ioctl(ufd, UFFDIO_API, &api) == 0 && api.api == UFFD_API,
-		      "userfaultfd API v%lld:%lld\n", UFFD_API, api.api);
-
-	t.page = mmap(NULL, 4096, PROT_WRITE, MAP_SHARED | MAP_ANON, 0, 0);
-	igt_assert(t.page != MAP_FAILED);
-
-	/* Register our fault handler for t.page */
-	memset(&reg, 0, sizeof(reg));
-	reg.mode = UFFDIO_REGISTER_MODE_MISSING;
-	reg.range.start = to_user_pointer(t.page);
-	reg.range.len = 4096;
-	do_ioctl(ufd, UFFDIO_REGISTER, &reg);
-
-	count = 0;
-	while (!READ_ONCE(t.err)) {
-		if (is_power_of_two(count)) {
-			unsigned long sz = count ? 2 * count : 1;
-			thread = realloc(thread, sz * sizeof(*thread));
-			igt_assert(thread);
-		}
-		if (pthread_create(&thread[count], NULL, ufd_thread, &t))
-			break;
-
-		if (count == 0) { /* Wait for the first userfault */
-			igt_assert_eq(read(ufd, &msg, sizeof(msg)), sizeof(msg));
-			igt_assert_eq(msg.event, UFFD_EVENT_PAGEFAULT);
-			igt_assert(from_user_pointer(msg.arg.pagefault.address) == t.page);
-		}
-
-		count++;
-	}
-	igt_assert(count);
-	if (t.err)
-		igt_warn("err:%d after %lu threads\n", t.err, count);
-
-	/* Service the fault; releasing the stuck ioctls */
-	memset(&copy, 0, sizeof(copy));
-	copy.dst = msg.arg.pagefault.address;
-	copy.src = to_user_pointer(memset(buf, 0xc5, sizeof(buf)));
-	copy.len = 4096;
-	do_ioctl(ufd, UFFDIO_COPY, &copy);
-
-	while (count--)
-		pthread_join(thread[count], NULL);
-	free(thread);
-
-	munmap(t.page, 4096);
-	close(ufd);
-
-	close(t.vgem);
-}
+/* TODO: FreeBSD - USERFAULTFD */
+// static void test_exhaustion(int i915)
+// {
+// 	struct uffdio_api api = { .api = UFFD_API };
+// 	struct uffdio_register reg;
+// 	struct uffdio_copy copy;
+// 	struct ufd_thread t = {
+// 		.i915 = i915,
+// 		.vgem = drm_open_driver(DRIVER_VGEM),
+// 	};
+// 	pthread_t *thread = NULL;
+// 	struct uffd_msg msg;
+// 	unsigned long count;
+// 	char buf[4096];
+// 	int ufd;
+// 
+// 	unlimited_processes(1024 * 1024);
+// 
+// 	ufd = userfaultfd(0);
+// 	igt_require_f(ufd != -1, "kernel support for userfaultfd\n");
+// 	igt_require_f(ioctl(ufd, UFFDIO_API, &api) == 0 && api.api == UFFD_API,
+// 		      "userfaultfd API v%lld:%lld\n", UFFD_API, api.api);
+// 
+// 	t.page = mmap(NULL, 4096, PROT_WRITE, MAP_SHARED | MAP_ANON, 0, 0);
+// 	igt_assert(t.page != MAP_FAILED);
+// 
+// 	/* Register our fault handler for t.page */
+// 	memset(&reg, 0, sizeof(reg));
+// 	reg.mode = UFFDIO_REGISTER_MODE_MISSING;
+// 	reg.range.start = to_user_pointer(t.page);
+// 	reg.range.len = 4096;
+// 	do_ioctl(ufd, UFFDIO_REGISTER, &reg);
+// 
+// 	count = 0;
+// 	while (!READ_ONCE(t.err)) {
+// 		if (is_power_of_two(count)) {
+// 			unsigned long sz = count ? 2 * count : 1;
+// 			thread = realloc(thread, sz * sizeof(*thread));
+// 			igt_assert(thread);
+// 		}
+// 		if (pthread_create(&thread[count], NULL, ufd_thread, &t))
+// 			break;
+// 
+// 		if (count == 0) { /* Wait for the first userfault */
+// 			igt_assert_eq(read(ufd, &msg, sizeof(msg)), sizeof(msg));
+// 			igt_assert_eq(msg.event, UFFD_EVENT_PAGEFAULT);
+// 			igt_assert(from_user_pointer(msg.arg.pagefault.address) == t.page);
+// 		}
+// 
+// 		count++;
+// 	}
+// 	igt_assert(count);
+// 	if (t.err)
+// 		igt_warn("err:%d after %lu threads\n", t.err, count);
+// 
+// 	/* Service the fault; releasing the stuck ioctls */
+// 	memset(&copy, 0, sizeof(copy));
+// 	copy.dst = msg.arg.pagefault.address;
+// 	copy.src = to_user_pointer(memset(buf, 0xc5, sizeof(buf)));
+// 	copy.len = 4096;
+// 	do_ioctl(ufd, UFFDIO_COPY, &copy);
+// 
+// 	while (count--)
+// 		pthread_join(thread[count], NULL);
+// 	free(thread);
+// 
+// 	munmap(t.page, 4096);
+// 	close(ufd);
+// 
+// 	close(t.vgem);
+// }
 
 #define OBJECT_SIZE 16384
 #define KGRN "\x1B[32m"
@@ -324,8 +326,9 @@ igt_main_args("s:", NULL, help_str, opt_handler, NULL)
 	igt_subtest("self")
 		pread_self(fd);
 
-	igt_subtest("exhaustion")
-		test_exhaustion(fd);
+/* TODO: FreeBSD - USERFAULTFD */
+// 	igt_subtest("exhaustion")
+// 		test_exhaustion(fd);
 
 	for (c = cache; c->level != -1; c++) {
 		igt_subtest(c->name) {

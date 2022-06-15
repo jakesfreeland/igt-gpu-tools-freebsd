@@ -34,9 +34,9 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
-#ifdef __linux__
-# include <sys/syscall.h>
-#endif
+/* #ifdef __linux__ */
+#include <sys/syscall.h>
+/* #endif */
 
 #include <i915/gem_submission.h>
 

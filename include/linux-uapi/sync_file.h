@@ -12,8 +12,13 @@
 #ifndef _LINUX_SYNC_H
 #define _LINUX_SYNC_H
 
+#if defined(__linux__)
 #include <linux/ioctl.h>
 #include <linux/types.h>
+#elif defined(__FreeBSD__)
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#endif
 
 /**
  * struct sync_merge_data - data passed to merge ioctl

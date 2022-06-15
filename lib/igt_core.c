@@ -43,9 +43,9 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/types.h>
-#ifdef __linux__
+/* #ifdef __linux__ */
 #include <sys/syscall.h>
-#endif
+/* #endif */
 #include <pthread.h>
 #include <sys/utsname.h>
 #include <termios.h>

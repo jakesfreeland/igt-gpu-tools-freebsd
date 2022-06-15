@@ -28,7 +28,11 @@
 #include <fcntl.h>
 #include <libgen.h>
 #include <unistd.h>
+#if defined(__linux__)
 #include <linux/limits.h>
+#elif defined(__FreeBSD__)
+#include <sys/limits.h>
+#endif
 
 #define TOOLS "../tools/"
 

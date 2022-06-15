@@ -40,9 +40,12 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#if defined(__linux__)
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
-
+#elif defined(__freebsd__)
+#include <dev/iicbus/iic.h>
+#endif
 #include <drm.h>
 
 #include "i915/gem.h"

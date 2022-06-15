@@ -36,7 +36,8 @@
  * The goal is to simply ensure the basics work.
  */
 
-#include <linux/userfaultfd.h>
+/* TODO: FreeBSD - USERFAULTFD */
+/* #include <linux/userfaultfd.h> */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -2238,64 +2239,65 @@ static void test_probe(int fd)
 #undef N_PAGES
 }
 
-static void test_userfault(int i915)
-{
-	struct uffdio_api api = { .api = UFFD_API };
-	struct uffdio_register reg;
-	struct uffdio_copy copy;
-	struct uffd_msg msg;
-	struct ufd_thread t;
-	pthread_t thread;
-	char poison[4096];
-	int ufd;
-
-	/*
-	 * Register a page with userfaultfd, and wrap that inside a userptr bo.
-	 * When we try to use gup insider userptr_get_pages, it will trigger
-	 * a pagefault that is sent to the userfaultfd for servicing. This
-	 * is arbitrarily slow, as the submission must wait until the fault
-	 * is serviced by the userspace fault handler.
-	 */
-
-	ufd = userfaultfd(0);
-	igt_require_f(ufd != -1, "kernel support for userfaultfd\n");
-	igt_require_f(ioctl(ufd, UFFDIO_API, &api) == 0 && api.api == UFFD_API,
-		      "userfaultfd API v%lld:%lld\n", UFFD_API, api.api);
-
-	t.i915 = i915;
-
-	t.page = mmap(NULL, 4096, PROT_WRITE, MAP_SHARED | MAP_ANON, 0, 0);
-	igt_assert(t.page != MAP_FAILED);
-
-	/* Register the page with userfault, we are its pagefault handler now! */
-	memset(&reg, 0, sizeof(reg));
-	reg.mode = UFFDIO_REGISTER_MODE_MISSING;
-	reg.range.start = to_user_pointer(t.page);
-	reg.range.len = 4096;
-	do_ioctl(ufd, UFFDIO_REGISTER, &reg);
-
-	igt_assert(pthread_create(&thread, NULL, ufd_thread, &t) == 0);
-
-	/* Wait for the fault */
-	igt_assert_eq(read(ufd, &msg, sizeof(msg)), sizeof(msg));
-	igt_assert_eq(msg.event, UFFD_EVENT_PAGEFAULT);
-	igt_assert(from_user_pointer(msg.arg.pagefault.address) == t.page);
-
-	/* Faulting thread remains blocked */
-	igt_assert_eq(t.i915, i915);
-
-	/* Service the fault; releasing the thread & submission */
-	memset(&copy, 0, sizeof(copy));
-	copy.dst = msg.arg.pagefault.address;
-	copy.src = to_user_pointer(memset(poison, 0xc5, sizeof(poison)));
-	copy.len = 4096;
-	do_ioctl(ufd, UFFDIO_COPY, &copy);
-
-	pthread_join(thread, NULL);
-
-	munmap(t.page, 4096);
-	close(ufd);
-}
+/* TODO: FreeBSD - USERFAULTFD */
+// static void test_userfault(int i915)
+// {
+// 	struct uffdio_api api = { .api = UFFD_API };
+// 	struct uffdio_register reg;
+// 	struct uffdio_copy copy;
+// 	struct uffd_msg msg;
+// 	struct ufd_thread t;
+// 	pthread_t thread;
+// 	char poison[4096];
+// 	int ufd;
+// 
+// 	/*
+// 	 * Register a page with userfaultfd, and wrap that inside a userptr bo.
+// 	 * When we try to use gup insider userptr_get_pages, it will trigger
+// 	 * a pagefault that is sent to the userfaultfd for servicing. This
+// 	 * is arbitrarily slow, as the submission must wait until the fault
+// 	 * is serviced by the userspace fault handler.
+// 	 */
+// 
+// 	ufd = userfaultfd(0);
+// 	igt_require_f(ufd != -1, "kernel support for userfaultfd\n");
+// 	igt_require_f(ioctl(ufd, UFFDIO_API, &api) == 0 && api.api == UFFD_API,
+// 		      "userfaultfd API v%lld:%lld\n", UFFD_API, api.api);
+// 
+// 	t.i915 = i915;
+// 
+// 	t.page = mmap(NULL, 4096, PROT_WRITE, MAP_SHARED | MAP_ANON, 0, 0);
+// 	igt_assert(t.page != MAP_FAILED);
+// 
+// 	/* Register the page with userfault, we are its pagefault handler now! */
+// 	memset(&reg, 0, sizeof(reg));
+// 	reg.mode = UFFDIO_REGISTER_MODE_MISSING;
+// 	reg.range.start = to_user_pointer(t.page);
+// 	reg.range.len = 4096;
+// 	do_ioctl(ufd, UFFDIO_REGISTER, &reg);
+// 
+// 	igt_assert(pthread_create(&thread, NULL, ufd_thread, &t) == 0);
+// 
+// 	/* Wait for the fault */
+// 	igt_assert_eq(read(ufd, &msg, sizeof(msg)), sizeof(msg));
+// 	igt_assert_eq(msg.event, UFFD_EVENT_PAGEFAULT);
+// 	igt_assert(from_user_pointer(msg.arg.pagefault.address) == t.page);
+// 
+// 	/* Faulting thread remains blocked */
+// 	igt_assert_eq(t.i915, i915);
+// 
+// 	/* Service the fault; releasing the thread & submission */
+// 	memset(&copy, 0, sizeof(copy));
+// 	copy.dst = msg.arg.pagefault.address;
+// 	copy.src = to_user_pointer(memset(poison, 0xc5, sizeof(poison)));
+// 	copy.len = 4096;
+// 	do_ioctl(ufd, UFFDIO_COPY, &copy);
+// 
+// 	pthread_join(thread, NULL);
+// 
+// 	munmap(t.page, 4096);
+// 	close(ufd);
+// }
 
 uint64_t total_ram;
 uint64_t aperture_size;
@@ -2383,8 +2385,9 @@ igt_main_args("c:", NULL, help_str, opt_handler, NULL)
 		igt_subtest("set-cache-level")
 			test_set_caching(fd);
 
-		igt_subtest("userfault")
-			test_userfault(fd);
+/* TODO: FreeBSD - USERFAULTFD */
+// 		igt_subtest("userfault")
+// 			test_userfault(fd);
 
 		igt_subtest("relocations") {
 			igt_require(gem_has_relocations(fd));

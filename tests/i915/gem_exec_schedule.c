@@ -23,7 +23,8 @@
 
 #include "config.h"
 
-#include <linux/userfaultfd.h>
+/* TODO: FreeBSD - USERFAULTFD */
+/* #include <linux/userfaultfd.h> */
 
 #include <pthread.h>
 #include <sys/poll.h>
@@ -2565,112 +2566,113 @@ static void *ufd_thread(void *arg)
 	return NULL;
 }
 
-static void test_pi_userfault(int i915,
-			      const intel_ctx_cfg_t *cfg,
-			      unsigned int engine)
-{
-	const uint32_t bbe = MI_BATCH_BUFFER_END;
-	struct uffdio_api api = { .api = UFFD_API };
-	struct uffdio_register reg;
-	struct uffdio_copy copy;
-	struct uffd_msg msg;
-	struct ufd_thread t;
-	pthread_t thread;
-	char buf[4096];
-	char *poison;
-	int ufd;
-
-	/*
-	 * Resource contention can easily lead to priority inversion problems,
-	 * that we wish to avoid. Here, we simulate one simple form of resource
-	 * starvation by using an arbitrary slow userspace fault handler to cause
-	 * the low priority context to block waiting for its resource. While it
-	 * is blocked, it should not prevent a higher priority context from
-	 * executing.
-	 *
-	 * This is only a very simple scenario, in more general tests we will
-	 * need to simulate contention on the shared resource such that both
-	 * low and high priority contexts are starving and must fight over
-	 * the meagre resources. One step at a time.
-	 */
-
-	ufd = userfaultfd(0);
-	igt_require_f(ufd != -1, "kernel support for userfaultfd\n");
-	igt_require_f(ioctl(ufd, UFFDIO_API, &api) == 0 && api.api == UFFD_API,
-		      "userfaultfd API v%lld:%lld\n", UFFD_API, api.api);
-
-	t.i915 = i915;
-	t.cfg = cfg;
-	t.engine = engine;
-
-	t.page = mmap(NULL, 4096, PROT_WRITE, MAP_SHARED | MAP_ANON, 0, 0);
-	igt_assert(t.page != MAP_FAILED);
-
-	t.batch = gem_create(i915, 4096);
-	poison = gem_mmap__device_coherent(i915, t.batch, 0, 4096, PROT_WRITE);
-	memset(poison, 0xff, 4096);
-
-	/* Register our fault handler for t.page */
-	memset(&reg, 0, sizeof(reg));
-	reg.mode = UFFDIO_REGISTER_MODE_MISSING;
-	reg.range.start = to_user_pointer(t.page);
-	reg.range.len = 4096;
-	do_ioctl(ufd, UFFDIO_REGISTER, &reg);
-
-	/* Kick off the low priority submission */
-	igt_assert(pthread_create(&thread, NULL, ufd_thread, &t) == 0);
-
-	/* Wait until the low priority thread is blocked on a fault */
-	igt_assert_eq(read(ufd, &msg, sizeof(msg)), sizeof(msg));
-	igt_assert_eq(msg.event, UFFD_EVENT_PAGEFAULT);
-	igt_assert(from_user_pointer(msg.arg.pagefault.address) == t.page);
-
-	/* While the low priority context is blocked; execute a vip */
-	if (1) {
-		struct drm_i915_gem_exec_object2 obj = {
-			.handle = gem_create(i915, 4096),
-		};
-		struct pollfd pfd;
-		const intel_ctx_t *ctx = intel_ctx_create(i915, cfg);
-		struct drm_i915_gem_execbuffer2 eb = {
-			.buffers_ptr = to_user_pointer(&obj),
-			.buffer_count = 1,
-			.flags = engine | I915_EXEC_FENCE_OUT,
-			.rsvd1 = ctx->id,
-		};
-		gem_context_set_priority(i915, eb.rsvd1, MAX_PRIO);
-		gem_write(i915, obj.handle, 0, &bbe, sizeof(bbe));
-		gem_execbuf_wr(i915, &eb);
-		gem_close(i915, obj.handle);
-
-		memset(&pfd, 0, sizeof(pfd));
-		pfd.fd = eb.rsvd2 >> 32;
-		pfd.events = POLLIN;
-		poll(&pfd, 1, -1);
-		igt_assert_eq(sync_fence_status(pfd.fd), 1);
-		close(pfd.fd);
-
-		intel_ctx_destroy(i915, ctx);
-	}
-
-	/* Confirm the low priority context is still waiting */
-	igt_assert_eq(t.i915, i915);
-	memcpy(poison, &bbe, sizeof(bbe));
-	munmap(poison, 4096);
-
-	/* Service the fault; releasing the low priority context */
-	memset(&copy, 0, sizeof(copy));
-	copy.dst = msg.arg.pagefault.address;
-	copy.src = to_user_pointer(memset(buf, 0xc5, sizeof(buf)));
-	copy.len = 4096;
-	do_ioctl(ufd, UFFDIO_COPY, &copy);
-
-	pthread_join(thread, NULL);
-
-	gem_close(i915, t.batch);
-	munmap(t.page, 4096);
-	close(ufd);
-}
+/* TODO: FreeBSD - USERFAULTFD */
+// static void test_pi_userfault(int i915,
+// 			      const intel_ctx_cfg_t *cfg,
+// 			      unsigned int engine)
+// {
+// 	const uint32_t bbe = MI_BATCH_BUFFER_END;
+// 	struct uffdio_api api = { .api = UFFD_API };
+// 	struct uffdio_register reg;
+// 	struct uffdio_copy copy;
+// 	struct uffd_msg msg;
+// 	struct ufd_thread t;
+// 	pthread_t thread;
+// 	char buf[4096];
+// 	char *poison;
+// 	int ufd;
+// 
+// 	/*
+// 	 * Resource contention can easily lead to priority inversion problems,
+// 	 * that we wish to avoid. Here, we simulate one simple form of resource
+// 	 * starvation by using an arbitrary slow userspace fault handler to cause
+// 	 * the low priority context to block waiting for its resource. While it
+// 	 * is blocked, it should not prevent a higher priority context from
+// 	 * executing.
+// 	 *
+// 	 * This is only a very simple scenario, in more general tests we will
+// 	 * need to simulate contention on the shared resource such that both
+// 	 * low and high priority contexts are starving and must fight over
+// 	 * the meagre resources. One step at a time.
+// 	 */
+// 
+// 	ufd = userfaultfd(0);
+// 	igt_require_f(ufd != -1, "kernel support for userfaultfd\n");
+// 	igt_require_f(ioctl(ufd, UFFDIO_API, &api) == 0 && api.api == UFFD_API,
+// 		      "userfaultfd API v%lld:%lld\n", UFFD_API, api.api);
+// 
+// 	t.i915 = i915;
+// 	t.cfg = cfg;
+// 	t.engine = engine;
+// 
+// 	t.page = mmap(NULL, 4096, PROT_WRITE, MAP_SHARED | MAP_ANON, 0, 0);
+// 	igt_assert(t.page != MAP_FAILED);
+// 
+// 	t.batch = gem_create(i915, 4096);
+// 	poison = gem_mmap__device_coherent(i915, t.batch, 0, 4096, PROT_WRITE);
+// 	memset(poison, 0xff, 4096);
+// 
+// 	/* Register our fault handler for t.page */
+// 	memset(&reg, 0, sizeof(reg));
+// 	reg.mode = UFFDIO_REGISTER_MODE_MISSING;
+// 	reg.range.start = to_user_pointer(t.page);
+// 	reg.range.len = 4096;
+// 	do_ioctl(ufd, UFFDIO_REGISTER, &reg);
+// 
+// 	/* Kick off the low priority submission */
+// 	igt_assert(pthread_create(&thread, NULL, ufd_thread, &t) == 0);
+// 
+// 	/* Wait until the low priority thread is blocked on a fault */
+// 	igt_assert_eq(read(ufd, &msg, sizeof(msg)), sizeof(msg));
+// 	igt_assert_eq(msg.event, UFFD_EVENT_PAGEFAULT);
+// 	igt_assert(from_user_pointer(msg.arg.pagefault.address) == t.page);
+// 
+// 	/* While the low priority context is blocked; execute a vip */
+// 	if (1) {
+// 		struct drm_i915_gem_exec_object2 obj = {
+// 			.handle = gem_create(i915, 4096),
+// 		};
+// 		struct pollfd pfd;
+// 		const intel_ctx_t *ctx = intel_ctx_create(i915, cfg);
+// 		struct drm_i915_gem_execbuffer2 eb = {
+// 			.buffers_ptr = to_user_pointer(&obj),
+// 			.buffer_count = 1,
+// 			.flags = engine | I915_EXEC_FENCE_OUT,
+// 			.rsvd1 = ctx->id,
+// 		};
+// 		gem_context_set_priority(i915, eb.rsvd1, MAX_PRIO);
+// 		gem_write(i915, obj.handle, 0, &bbe, sizeof(bbe));
+// 		gem_execbuf_wr(i915, &eb);
+// 		gem_close(i915, obj.handle);
+// 
+// 		memset(&pfd, 0, sizeof(pfd));
+// 		pfd.fd = eb.rsvd2 >> 32;
+// 		pfd.events = POLLIN;
+// 		poll(&pfd, 1, -1);
+// 		igt_assert_eq(sync_fence_status(pfd.fd), 1);
+// 		close(pfd.fd);
+// 
+// 		intel_ctx_destroy(i915, ctx);
+// 	}
+// 
+// 	/* Confirm the low priority context is still waiting */
+// 	igt_assert_eq(t.i915, i915);
+// 	memcpy(poison, &bbe, sizeof(bbe));
+// 	munmap(poison, 4096);
+// 
+// 	/* Service the fault; releasing the low priority context */
+// 	memset(&copy, 0, sizeof(copy));
+// 	copy.dst = msg.arg.pagefault.address;
+// 	copy.src = to_user_pointer(memset(buf, 0xc5, sizeof(buf)));
+// 	copy.len = 4096;
+// 	do_ioctl(ufd, UFFDIO_COPY, &copy);
+// 
+// 	pthread_join(thread, NULL);
+// 
+// 	gem_close(i915, t.batch);
+// 	munmap(t.page, 4096);
+// 	close(ufd);
+// }
 
 static void *iova_thread(struct ufd_thread *t, int prio)
 {
@@ -2702,144 +2704,145 @@ static void *iova_high(void *arg)
 	return iova_thread(arg, MAX_PRIO);
 }
 
-static void test_pi_iova(int i915, const intel_ctx_cfg_t *cfg,
-			 unsigned int engine, unsigned int flags)
-{
-	intel_ctx_cfg_t ufd_cfg = *cfg;
-	const intel_ctx_t *spinctx;
-	struct uffdio_api api = { .api = UFFD_API };
-	struct uffdio_register reg;
-	struct uffdio_copy copy;
-	struct uffd_msg msg;
-	struct ufd_thread t;
-	igt_spin_t *spin;
-	pthread_t hi, lo;
-	char poison[4096];
-	int ufd;
-	uint64_t ahnd;
-
-	/*
-	 * In this scenario, we have a pair of contending contexts that
-	 * share the same resource. That resource is stuck behind a slow
-	 * page fault such that neither context has immediate access to it.
-	 * What is expected is that as soon as that resource becomes available,
-	 * the two contexts are queued with the high priority context taking
-	 * precedence. We need to check that we do not cross-contaminate
-	 * the two contents with the page fault on the shared resource
-	 * initiated by the low priority context. (Consider that the low
-	 * priority context may install an exclusive fence for the page
-	 * fault, which is then used for strict ordering by the high priority
-	 * context, causing an unwanted implicit dependency between the two
-	 * and promoting the low priority context to high.)
-	 *
-	 * SHARED: the two contexts share a vm, but still have separate
-	 * timelines that should not mingle.
-	 */
-
-	ufd = userfaultfd(0);
-	igt_require_f(ufd != -1, "kernel support for userfaultfd\n");
-	igt_require_f(ioctl(ufd, UFFDIO_API, &api) == 0 && api.api == UFFD_API,
-		      "userfaultfd API v%lld:%lld\n", UFFD_API, api.api);
-
-	if ((flags & SHARED) && gem_uses_full_ppgtt(i915))
-		ufd_cfg.vm = gem_vm_create(i915);
-
-	spinctx = intel_ctx_create(i915, cfg);
-	ahnd = get_reloc_ahnd(i915, spinctx->id);
-	t.i915 = i915;
-	t.cfg = &ufd_cfg;
-	t.engine = engine;
-	t.ahnd = ahnd;
-
-	t.count = 2;
-	pthread_cond_init(&t.cond, NULL);
-	pthread_mutex_init(&t.mutex, NULL);
-
-	t.page = mmap(NULL, 4096, PROT_WRITE, MAP_SHARED | MAP_ANON, 0, 0);
-	igt_assert(t.page != MAP_FAILED);
-	t.batch = create_userptr(i915, t.page);
-	t.scratch = gem_create(i915, 4096);
-	t.batch_offset = get_offset(ahnd, t.batch, 4096, 0);
-	t.scratch_offset = get_offset(ahnd, t.scratch, 4096, 0);
-
-	/* Register our fault handler for t.page */
-	memset(&reg, 0, sizeof(reg));
-	reg.mode = UFFDIO_REGISTER_MODE_MISSING;
-	reg.range.start = to_user_pointer(t.page);
-	reg.range.len = 4096;
-	do_ioctl(ufd, UFFDIO_REGISTER, &reg);
-
-	/*
-	 * Fill the engine with spinners; the store_dword() is too quick!
-	 *
-	 * It is not that it is too quick, it that the order in which the
-	 * requests are signaled from the pagefault completion is loosely
-	 * defined (currently, it's in order of attachment so low context
-	 * wins), then submission into the execlists is immediate with the
-	 * low context filling the last slot in the ELSP. Preemption will
-	 * not take place until after the low priority context has had a
-	 * chance to run, and since the task is very short there is no
-	 * arbitration point inside the batch buffer so we only preempt
-	 * after the low priority context has completed.
-	 *
-	 * One way to prevent such opportunistic execution of the low priority
-	 * context would be to remove direct submission and wait until all
-	 * signals are delivered (as the signal delivery is under the irq lock,
-	 * the local tasklet will not run until after all signals have been
-	 * delivered... but another tasklet might).
-	 */
-	spin = igt_spin_new(i915, .ahnd = ahnd, .ctx = spinctx, .engine = engine);
-	for (int i = 0; i < MAX_ELSP_QLEN; i++) {
-		const intel_ctx_t *ctx = create_highest_priority(i915, cfg);
-		spin->execbuf.rsvd1 = ctx->id;
-		gem_execbuf(i915, &spin->execbuf);
-		intel_ctx_destroy(i915, ctx);
-	}
-
-	/* Kick off the submission threads */
-	igt_assert(pthread_create(&lo, NULL, iova_low, &t) == 0);
-
-	/* Wait until the low priority thread is blocked on the fault */
-	igt_assert_eq(read(ufd, &msg, sizeof(msg)), sizeof(msg));
-	igt_assert_eq(msg.event, UFFD_EVENT_PAGEFAULT);
-	igt_assert(from_user_pointer(msg.arg.pagefault.address) == t.page);
-
-	/* Then release a very similar thread, but at high priority! */
-	igt_assert(pthread_create(&hi, NULL, iova_high, &t) == 0);
-
-	/* Service the fault; releasing both contexts */
-	memset(&copy, 0, sizeof(copy));
-	copy.dst = msg.arg.pagefault.address;
-	copy.src = to_user_pointer(memset(poison, 0xc5, sizeof(poison)));
-	copy.len = 4096;
-	do_ioctl(ufd, UFFDIO_COPY, &copy);
-
-	/* Wait until both threads have had a chance to submit */
-	pthread_mutex_lock(&t.mutex);
-	while (t.count)
-		pthread_cond_wait(&t.cond, &t.mutex);
-	pthread_mutex_unlock(&t.mutex);
-	igt_debugfs_dump(i915, "i915_engine_info");
-	igt_spin_free(i915, spin);
-	intel_ctx_destroy(i915, spinctx);
-	put_offset(ahnd, t.scratch);
-	put_offset(ahnd, t.batch);
-	put_ahnd(ahnd);
-
-	pthread_join(hi, NULL);
-	pthread_join(lo, NULL);
-	gem_close(i915, t.batch);
-
-	igt_assert_eq(__sync_read_u32(i915, t.scratch, 0), MIN_PRIO);
-	gem_close(i915, t.scratch);
-
-	munmap(t.page, 4096);
-
-	if (ufd_cfg.vm)
-		gem_vm_destroy(i915, ufd_cfg.vm);
-
-	close(ufd);
-}
+/* TODO: FreeBSD - USERFAULTFD */
+// static void test_pi_iova(int i915, const intel_ctx_cfg_t *cfg,
+// 			 unsigned int engine, unsigned int flags)
+// {
+// 	intel_ctx_cfg_t ufd_cfg = *cfg;
+// 	const intel_ctx_t *spinctx;
+// 	struct uffdio_api api = { .api = UFFD_API };
+// 	struct uffdio_register reg;
+// 	struct uffdio_copy copy;
+// 	struct uffd_msg msg;
+// 	struct ufd_thread t;
+// 	igt_spin_t *spin;
+// 	pthread_t hi, lo;
+// 	char poison[4096];
+// 	int ufd;
+// 	uint64_t ahnd;
+// 
+// 	/*
+// 	 * In this scenario, we have a pair of contending contexts that
+// 	 * share the same resource. That resource is stuck behind a slow
+// 	 * page fault such that neither context has immediate access to it.
+// 	 * What is expected is that as soon as that resource becomes available,
+// 	 * the two contexts are queued with the high priority context taking
+// 	 * precedence. We need to check that we do not cross-contaminate
+// 	 * the two contents with the page fault on the shared resource
+// 	 * initiated by the low priority context. (Consider that the low
+// 	 * priority context may install an exclusive fence for the page
+// 	 * fault, which is then used for strict ordering by the high priority
+// 	 * context, causing an unwanted implicit dependency between the two
+// 	 * and promoting the low priority context to high.)
+// 	 *
+// 	 * SHARED: the two contexts share a vm, but still have separate
+// 	 * timelines that should not mingle.
+// 	 */
+// 
+// 	ufd = userfaultfd(0);
+// 	igt_require_f(ufd != -1, "kernel support for userfaultfd\n");
+// 	igt_require_f(ioctl(ufd, UFFDIO_API, &api) == 0 && api.api == UFFD_API,
+// 		      "userfaultfd API v%lld:%lld\n", UFFD_API, api.api);
+// 
+// 	if ((flags & SHARED) && gem_uses_full_ppgtt(i915))
+// 		ufd_cfg.vm = gem_vm_create(i915);
+// 
+// 	spinctx = intel_ctx_create(i915, cfg);
+// 	ahnd = get_reloc_ahnd(i915, spinctx->id);
+// 	t.i915 = i915;
+// 	t.cfg = &ufd_cfg;
+// 	t.engine = engine;
+// 	t.ahnd = ahnd;
+// 
+// 	t.count = 2;
+// 	pthread_cond_init(&t.cond, NULL);
+// 	pthread_mutex_init(&t.mutex, NULL);
+// 
+// 	t.page = mmap(NULL, 4096, PROT_WRITE, MAP_SHARED | MAP_ANON, 0, 0);
+// 	igt_assert(t.page != MAP_FAILED);
+// 	t.batch = create_userptr(i915, t.page);
+// 	t.scratch = gem_create(i915, 4096);
+// 	t.batch_offset = get_offset(ahnd, t.batch, 4096, 0);
+// 	t.scratch_offset = get_offset(ahnd, t.scratch, 4096, 0);
+// 
+// 	/* Register our fault handler for t.page */
+// 	memset(&reg, 0, sizeof(reg));
+// 	reg.mode = UFFDIO_REGISTER_MODE_MISSING;
+// 	reg.range.start = to_user_pointer(t.page);
+// 	reg.range.len = 4096;
+// 	do_ioctl(ufd, UFFDIO_REGISTER, &reg);
+// 
+// 	/*
+// 	 * Fill the engine with spinners; the store_dword() is too quick!
+// 	 *
+// 	 * It is not that it is too quick, it that the order in which the
+// 	 * requests are signaled from the pagefault completion is loosely
+// 	 * defined (currently, it's in order of attachment so low context
+// 	 * wins), then submission into the execlists is immediate with the
+// 	 * low context filling the last slot in the ELSP. Preemption will
+// 	 * not take place until after the low priority context has had a
+// 	 * chance to run, and since the task is very short there is no
+// 	 * arbitration point inside the batch buffer so we only preempt
+// 	 * after the low priority context has completed.
+// 	 *
+// 	 * One way to prevent such opportunistic execution of the low priority
+// 	 * context would be to remove direct submission and wait until all
+// 	 * signals are delivered (as the signal delivery is under the irq lock,
+// 	 * the local tasklet will not run until after all signals have been
+// 	 * delivered... but another tasklet might).
+// 	 */
+// 	spin = igt_spin_new(i915, .ahnd = ahnd, .ctx = spinctx, .engine = engine);
+// 	for (int i = 0; i < MAX_ELSP_QLEN; i++) {
+// 		const intel_ctx_t *ctx = create_highest_priority(i915, cfg);
+// 		spin->execbuf.rsvd1 = ctx->id;
+// 		gem_execbuf(i915, &spin->execbuf);
+// 		intel_ctx_destroy(i915, ctx);
+// 	}
+// 
+// 	/* Kick off the submission threads */
+// 	igt_assert(pthread_create(&lo, NULL, iova_low, &t) == 0);
+// 
+// 	/* Wait until the low priority thread is blocked on the fault */
+// 	igt_assert_eq(read(ufd, &msg, sizeof(msg)), sizeof(msg));
+// 	igt_assert_eq(msg.event, UFFD_EVENT_PAGEFAULT);
+// 	igt_assert(from_user_pointer(msg.arg.pagefault.address) == t.page);
+// 
+// 	/* Then release a very similar thread, but at high priority! */
+// 	igt_assert(pthread_create(&hi, NULL, iova_high, &t) == 0);
+// 
+// 	/* Service the fault; releasing both contexts */
+// 	memset(&copy, 0, sizeof(copy));
+// 	copy.dst = msg.arg.pagefault.address;
+// 	copy.src = to_user_pointer(memset(poison, 0xc5, sizeof(poison)));
+// 	copy.len = 4096;
+// 	do_ioctl(ufd, UFFDIO_COPY, &copy);
+// 
+// 	/* Wait until both threads have had a chance to submit */
+// 	pthread_mutex_lock(&t.mutex);
+// 	while (t.count)
+// 		pthread_cond_wait(&t.cond, &t.mutex);
+// 	pthread_mutex_unlock(&t.mutex);
+// 	igt_debugfs_dump(i915, "i915_engine_info");
+// 	igt_spin_free(i915, spin);
+// 	intel_ctx_destroy(i915, spinctx);
+// 	put_offset(ahnd, t.scratch);
+// 	put_offset(ahnd, t.batch);
+// 	put_ahnd(ahnd);
+// 
+// 	pthread_join(hi, NULL);
+// 	pthread_join(lo, NULL);
+// 	gem_close(i915, t.batch);
+// 
+// 	igt_assert_eq(__sync_read_u32(i915, t.scratch, 0), MIN_PRIO);
+// 	gem_close(i915, t.scratch);
+// 
+// 	munmap(t.page, 4096);
+// 
+// 	if (ufd_cfg.vm)
+// 		gem_vm_destroy(i915, ufd_cfg.vm);
+// 
+// 	close(ufd);
+// }
 
 static void measure_semaphore_power(int i915, const intel_ctx_t *ctx)
 {
@@ -3356,14 +3359,15 @@ igt_main
 		test_each_engine("pi-common", fd, ctx, e)
 			test_pi_ringfull(fd, &ctx->cfg, e->flags, SHARED);
 
-		test_each_engine("pi-userfault", fd, ctx, e)
-			test_pi_userfault(fd, &ctx->cfg, e->flags);
-
-		test_each_engine("pi-distinct-iova", fd, ctx, e)
-			test_pi_iova(fd, &ctx->cfg, e->flags, 0);
-
-		test_each_engine("pi-shared-iova", fd, ctx, e)
-			test_pi_iova(fd, &ctx->cfg, e->flags, SHARED);
+/* TODO: FreeBSD - USERFAULTFD */
+// 		test_each_engine("pi-userfault", fd, ctx, e)
+// 			test_pi_userfault(fd, &ctx->cfg, e->flags);
+// 
+// 		test_each_engine("pi-distinct-iova", fd, ctx, e)
+// 			test_pi_iova(fd, &ctx->cfg, e->flags, 0);
+// 
+// 		test_each_engine("pi-shared-iova", fd, ctx, e)
+// 			test_pi_iova(fd, &ctx->cfg, e->flags, SHARED);
 	}
 
 	igt_subtest_group {

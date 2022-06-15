@@ -23,7 +23,11 @@
 #include "igt.h"
 #include <dirent.h>
 #include <sys/utsname.h>
+#if defined(__linux__)
 #include <linux/limits.h>
+#elif defined (__FreeBSD__)
+#include <sys/limits.h>
+#endif
 #include <signal.h>
 #include <libgen.h>
 #include <signal.h>

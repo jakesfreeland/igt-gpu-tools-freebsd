@@ -21,7 +21,11 @@
  * IN THE SOFTWARE.
  */
 
+#if defined(__linux__)
 #include <linux/limits.h>
+#elif defined(__FreeBSD__)
+#include <sys/limits.h>
+#endif
 #include <signal.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>

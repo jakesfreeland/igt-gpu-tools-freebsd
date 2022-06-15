@@ -32,13 +32,12 @@
 #include <fcntl.h>
 #include <glib.h>
 #include <libudev.h>
-#ifdef __linux__
+#if defined(__linux__)
 #include <linux/limits.h>
+#elif defined(__FreeBSD__)
+#include <sys/limits.h>
 #endif
 #include <sys/stat.h>
-#ifdef __FreeBSD__
-#include <sys/syslimits.h>
-#endif
 #include <sys/types.h>
 
 /**
