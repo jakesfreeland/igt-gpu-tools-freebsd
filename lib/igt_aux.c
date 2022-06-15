@@ -1188,7 +1188,7 @@ void igt_unlock_mem(void)
  *
  * This function checks in the process table for an entry with the name @comm.
  */
-/* TODO: utilization of libprocps */
+/* TODO: FreeBSD - libprocps library */
 int igt_is_process_running(const char *comm)
 {
 	PROCTAB *proc;
@@ -1223,7 +1223,7 @@ int igt_is_process_running(const char *comm)
  * This function sends the signal @sig for a process found in process table
  * with name @comm.
  */
-/* TODO: utilization of libprocps */
+/* TODO: FreeBSD - libprocps library */
 int igt_terminate_process(int sig, const char *comm)
 {
 	PROCTAB *proc;
@@ -1388,7 +1388,7 @@ again:
  * This functions verifies, for each process running on the machine, if the
  * current working directory or the fds matches the one supplied in dir.
  */
-/* TODO: utilization of libprocps */
+/* TODO: FreeBSD - libprocps library */
 static void
 __igt_lsof(const char *dir)
 {
@@ -1466,7 +1466,7 @@ igt_lsof(const char *dpath)
 	free(sanitized);
 }
 
-/* TODO: utilization of libprocps */
+/* TODO: FreeBSD - libprocps library */
 static void pulseaudio_unload_module(proc_t *proc_info)
 {
 	struct igt_helper_process pa_proc = {};
@@ -1496,7 +1496,7 @@ static int pipewire_pulse_pid = 0;
 static int pipewire_pw_reserve_pid = 0;
 static struct igt_helper_process pw_reserve_proc = {};
 
-/* TODO: utilization of libprocps */
+/* TODO: FreeBSD - libprocps library */
 static void pipewire_reserve_wait(void)
 {
 	char xdg_dir[PATH_MAX];
@@ -1545,7 +1545,7 @@ static void pipewire_reserve_wait(void)
 /* Maximum time waiting for pw-reserve to start running */
 #define PIPEWIRE_RESERVE_MAX_TIME 1000 /* milisseconds */
 
-/* TODO: utilization of libprocps */
+/* TODO: FreeBSD - libprocps library */
 int pipewire_pulse_start_reserve(void)
 {
 	bool is_pw_reserve_running = false;
@@ -1623,7 +1623,7 @@ void pipewire_pulse_stop_reserve(void)
  *	  function returns the PID of pipewire-pulse, but won't touch it.
  * If the check fails, it means that the process can simply be killed.
  */
-/* TODO: utilization of libprocps */
+/* TODO: FreeBSD - libprocps library */
 static int
 __igt_lsof_audio_and_kill_proc(proc_t *proc_info, char *proc_path)
 {
@@ -1734,7 +1734,7 @@ __igt_lsof_audio_and_kill_proc(proc_t *proc_info, char *proc_path)
  * Special care should be taken with pipewire and pipewire-pulse, as those
  * daemons are respanned if they got killed.
  */
-/* TODO: utilization of libprocps */
+/* TODO: FreeBSD - libprocps library */
 int
 igt_lsof_kill_audio_processes(void)
 {

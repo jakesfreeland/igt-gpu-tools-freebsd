@@ -24,7 +24,7 @@
 #ifndef IGT_KMOD_H
 #define IGT_KMOD_H
 
-/* TODO: utilization of libkmod */
+/* TODO: FreeBSD - libkmod library */
 #include <libkmod.h>
 
 #include "igt_list.h"

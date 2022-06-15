@@ -21,7 +21,7 @@
  * IN THE SOFTWARE.
  */
 
-/* TODO: utilization of libkmod */
+/* TODO: FreeBSD - libkmod library */
 
 #include <ctype.h>
 #include <signal.h>
