@@ -118,7 +118,8 @@ static const char *__igt_debugfs_mount(void)
 	if (is_mountpoint("/debug"))
 		return "/debug";
 
-	if (mount("debug", "/sys/kernel/debug", "debugfs", 0, 0))
+	/* if (mount("debug", "/sys/kernel/debug", "debugfs", 0, 0)) */
+	if (mount("debugfs", "/sys/fs/debugfs", 0, 0))
 		return NULL;
 
 	return "/sys/kernel/debug";
