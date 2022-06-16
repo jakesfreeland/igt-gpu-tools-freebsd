@@ -5,8 +5,10 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-/* #include <sys/sysinfo.h> */
-/* #include <sys/sysmacros.h> */
+#ifdef __linux__
+#include <sys/sysinfo.h>
+#include <sys/sysmacros.h>
+#endif
 #include <time.h>
 #include <unistd.h>
 

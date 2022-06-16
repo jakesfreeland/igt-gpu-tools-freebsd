@@ -35,7 +35,9 @@
 #include <string.h>
 #include <sys/ioctl.h>
 #include <sys/stat.h>
+#ifdef __linux__
 #include <sys/sysmacros.h>
+#endif
 #include <sys/time.h>
 #include <sys/types.h>
 #include <time.h>

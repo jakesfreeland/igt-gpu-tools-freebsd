@@ -43,7 +43,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <termios.h>
+#ifdef __linux__
 #include <sys/sysmacros.h>
+#endif
 
 #include "igt_perf.h"
 #include "igt_drm_fdinfo.h"
