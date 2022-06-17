@@ -149,7 +149,9 @@ igt_get_avail_ram_mb(void)
 
 	retval = (uint64_t) pagesize * npages;
 #else
-#error "Unknown how to get available RAM for this OS"
+/* TODO: FreeBSD - GET AVAIL RAM */
+/* #error "Unknown how to get available RAM for this OS" */
+#warning "Unknown how to get available RAM for this OS"
 #endif
 
 	return retval / (1024*1024);
@@ -211,6 +213,7 @@ igt_get_total_swap_mb(void)
 
 	retval = (uint64_t) pagesize * totalpages;
 #else
+/* TODO: FreeBSD - GET SWAP SPACE */
 #warning "Unknown how to get swap size for this OS"
 	return 0;
 #endif
