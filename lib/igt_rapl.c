@@ -3,6 +3,8 @@
 #include <fcntl.h>
 #include <locale.h>
 #include <math.h>
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <inttypes.h>
 
@@ -55,7 +57,8 @@ int rapl_open(struct rapl *r, const char *domain)
 	if (r->fd < 0)
 		goto err;
 
-	r->fd = igt_perf_open(r->type, r->power);
+	/* TODO: FreeBSD - PERFORMANCE METRICS */
+	/* r->fd = igt_perf_open(r->type, r->power); */
 	if (r->fd < 0) {
 		r->fd = -errno;
 		goto err;
