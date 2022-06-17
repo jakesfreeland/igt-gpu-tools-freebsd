@@ -54,6 +54,9 @@
 
 #define abs(x) ((x) >= 0 ? (x) : -(x))
 
+#define	mmap64(addr, len, prot, flags, fd, offset) \
+	mmap(addr, len, prot, flags, fd, offset)
+
 static int OBJECT_SIZE = 16*1024*1024;
 
 static void

@@ -30,6 +30,9 @@
 #include "igt_core.h"
 #include "ioctl_wrappers.h"
 
+#define	mmap64(addr, len, prot, flags, fd, offset) \
+	mmap(addr, len, prot, flags, fd, offset)
+
 /**
  * SECTION:igt_vgem
  * @short_description: VGEM support library

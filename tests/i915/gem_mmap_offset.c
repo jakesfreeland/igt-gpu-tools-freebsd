@@ -38,6 +38,9 @@
 #include "igt.h"
 #include "igt_x86.h"
 
+#define	mmap64(addr, len, prot, flags, fd, offset) \
+	mmap(addr, len, prot, flags, fd, offset)
+
 IGT_TEST_DESCRIPTION("Basic MMAP_OFFSET IOCTL tests for mem regions\n");
 
 static int mmap_offset_ioctl(int i915, struct drm_i915_gem_mmap_offset *arg)
