@@ -59,6 +59,10 @@ struct int_sync_create_fence_data {
 #define INT_SYNC_IOC_CREATE_FENCE	_IOWR(INT_SYNC_IOC_MAGIC, 0, struct int_sync_create_fence_data)
 #define INT_SYNC_IOC_INC		_IOW(INT_SYNC_IOC_MAGIC, 1, __u32)
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
+
 static bool kernel_sw_sync_path(char *path, int length)
 {
 	snprintf(path, length, "%s", "/dev/sw_sync");

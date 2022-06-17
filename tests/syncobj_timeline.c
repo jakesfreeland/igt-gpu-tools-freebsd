@@ -31,6 +31,10 @@
 #include <signal.h>
 #include "drm.h"
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
+
 IGT_TEST_DESCRIPTION("Tests for the drm timeline sync object API");
 
 /* One tenth of a second */

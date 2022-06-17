@@ -34,6 +34,10 @@
 #include <sys/ioctl.h>
 #include "vc4_drm.h"
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
+
 static void
 test_used_bo(int fd, uint64_t timeout)
 {

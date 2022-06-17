@@ -71,6 +71,10 @@
 #define PAGE_SIZE 4096
 #endif
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
+
 static uint32_t userptr_flags;
 
 #define WIDTH 512

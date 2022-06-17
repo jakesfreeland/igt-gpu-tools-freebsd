@@ -35,6 +35,10 @@
 #include "intel_ctx.h"
 #include "sw_sync.h"
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
+
 IGT_TEST_DESCRIPTION("Check that execbuf waits for explicit fences");
 
 #ifndef SYNC_IOC_MERGE

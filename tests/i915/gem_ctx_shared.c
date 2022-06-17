@@ -61,6 +61,10 @@ static int priorities[] = {
 
 #define MAX_ELSP_QLEN 16
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
+
 IGT_TEST_DESCRIPTION("Test shared contexts.");
 
 static int __get_vm(int i915, uint32_t ctx, uint32_t *vm)

@@ -33,6 +33,10 @@
 #include <sys/ioctl.h>
 #include "vc4_drm.h"
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
+
 igt_main
 {
 	int fd;

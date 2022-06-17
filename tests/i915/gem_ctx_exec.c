@@ -48,6 +48,10 @@
 #include "igt_sysfs.h"
 #include "sw_sync.h"
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
+
 IGT_TEST_DESCRIPTION("Test context batch buffer execution.");
 
 /* Copied from gem_exec_nop.c */

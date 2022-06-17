@@ -50,6 +50,10 @@
 static unsigned long reset_timeout_ms = RESET_TIMEOUT_MS;
 #define NSEC_PER_MSEC (1000 * 1000ull)
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
+
 static void cleanup(int i915)
 {
 	igt_drop_caches_set(i915,

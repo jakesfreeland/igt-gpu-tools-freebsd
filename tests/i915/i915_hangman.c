@@ -50,6 +50,10 @@ static int sysfs = -1;
 
 #define OFFSET_ALIVE	10
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
+
 IGT_TEST_DESCRIPTION("Tests for hang detection and recovery");
 
 static void check_alive(void)

@@ -37,6 +37,10 @@
 #include "igt_sysfs.h"
 #include "sw_sync.h"
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
+
 IGT_TEST_DESCRIPTION("Exercise in-kernel load-balancing");
 
 #define MI_SEMAPHORE_WAIT		(0x1c << 23)

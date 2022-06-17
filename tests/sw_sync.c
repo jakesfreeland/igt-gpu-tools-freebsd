@@ -38,6 +38,9 @@
 
 #include "sw_sync.h"
 
+#ifndef ETIME
+#define ETIME	ETIMEDOUT
+#endif
 
 IGT_TEST_DESCRIPTION("Test SW Sync Framework");
 
