@@ -261,7 +261,8 @@ static bool kernel_has_sw_sync(void)
 {
 	char buf[128];
 
-	modprobe("sw_sync");
+	/* TODO: FreeBSD - libkmod library */
+	/* modprobe("sw_sync"); */
 
 	return kernel_sw_sync_path(buf, sizeof(buf));
 }
