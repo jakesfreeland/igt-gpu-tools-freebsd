@@ -324,10 +324,12 @@ void igt_fork_signal_helper(void)
 	 * and we send the signal at exactly the wrong time).
 	 */
 	signal(SIGCONT, sig_handler);
-	setpgrp(); /* define a new process group for the tests */
+	/* setpgrp(); */ /* define a new process group for the tests */
+	setpgid (0, 0); /* define a new process group for the tests */
 
 	igt_fork_helper(&signal_helper) {
-		setpgrp(); /* Escape from the test process group */
+		/* setpgrp(); */ /* Escape from the test process group */
+		setpgid (0, 0); /* Escape from the test process group */
 
 		/* Pass along the test process group identifier,
 		 * negative pid => send signal to everyone in the group.
@@ -1316,74 +1318,76 @@ igt_show_stat_header(void)
 		"COMM", "PID", "Type", "UID", "GID", "Size", "Filename");
 }
 
-static void
-igt_show_stat(proc_t *info, int *state, const char *fn)
-{
-	struct pinfo p = { .pid = info->tid, .comm = info->cmd, .fn = fn };
+/* TODO: FreeBSD - libprocps library */
+// static void
+// igt_show_stat(proc_t *info, int *state, const char *fn)
+// {
+// 	struct pinfo p = { .pid = info->tid, .comm = info->cmd, .fn = fn };
+// 
+// 	if (!*state)
+// 		igt_show_stat_header();
+// 
+// 	__igt_show_stat(&p);
+// 	++*state;
+// }
 
-	if (!*state)
-		igt_show_stat_header();
-
-	__igt_show_stat(&p);
-	++*state;
-}
-
-static void
-__igt_lsof_fds(proc_t *proc_info, int *state, char *proc_path, const char *dir)
-{
-	struct dirent *d;
-	struct stat st;
-	char path[PATH_MAX];
-	char *fd_lnk;
-
-	/* default fds or kernel threads */
-	const char *default_fds[] = { "/dev/pts", "/dev/null" };
-
-	DIR *dp = opendir(proc_path);
-	igt_assert(dp);
-again:
-	while ((d = readdir(dp))) {
-		char *copy_fd_lnk;
-		char *dirn;
-
-		unsigned int i;
-		ssize_t read;
-
-		if (*d->d_name == '.')
-			continue;
-
-		memset(path, 0, sizeof(path));
-		snprintf(path, sizeof(path), "%s/%s", proc_path, d->d_name);
-
-		if (lstat(path, &st) == -1)
-			continue;
-
-		fd_lnk = malloc(st.st_size + 1);
-
-		igt_assert((read = readlink(path, fd_lnk, st.st_size + 1)));
-		fd_lnk[read] = '\0';
-
-		for (i = 0; i < ARRAY_SIZE(default_fds); ++i) {
-			if (!strncmp(default_fds[i],
-				     fd_lnk,
-				     strlen(default_fds[i]))) {
-				free(fd_lnk);
-				goto again;
-			}
-		}
-
-		copy_fd_lnk = strdup(fd_lnk);
-		dirn = dirname(copy_fd_lnk);
-
-		if (!strncmp(dir, dirn, strlen(dir)))
-			igt_show_stat(proc_info, state, fd_lnk);
-
-		free(copy_fd_lnk);
-		free(fd_lnk);
-	}
-
-	closedir(dp);
-}
+/* TODO: FreeBSD - libprocps library */
+// static void
+// __igt_lsof_fds(proc_t *proc_info, int *state, char *proc_path, const char *dir)
+// {
+// 	struct dirent *d;
+// 	struct stat st;
+// 	char path[PATH_MAX];
+// 	char *fd_lnk;
+// 
+// 	/* default fds or kernel threads */
+// 	const char *default_fds[] = { "/dev/pts", "/dev/null" };
+// 
+// 	DIR *dp = opendir(proc_path);
+// 	igt_assert(dp);
+// again:
+// 	while ((d = readdir(dp))) {
+// 		char *copy_fd_lnk;
+// 		char *dirn;
+// 
+// 		unsigned int i;
+// 		ssize_t read;
+// 
+// 		if (*d->d_name == '.')
+// 			continue;
+// 
+// 		memset(path, 0, sizeof(path));
+// 		snprintf(path, sizeof(path), "%s/%s", proc_path, d->d_name);
+// 
+// 		if (lstat(path, &st) == -1)
+// 			continue;
+// 
+// 		fd_lnk = malloc(st.st_size + 1);
+// 
+// 		igt_assert((read = readlink(path, fd_lnk, st.st_size + 1)));
+// 		fd_lnk[read] = '\0';
+// 
+// 		for (i = 0; i < ARRAY_SIZE(default_fds); ++i) {
+// 			if (!strncmp(default_fds[i],
+// 				     fd_lnk,
+// 				     strlen(default_fds[i]))) {
+// 				free(fd_lnk);
+// 				goto again;
+// 			}
+// 		}
+// 
+// 		copy_fd_lnk = strdup(fd_lnk);
+// 		dirn = dirname(copy_fd_lnk);
+// 
+// 		if (!strncmp(dir, dirn, strlen(dir)))
+// 			igt_show_stat(proc_info, state, fd_lnk);
+// 
+// 		free(copy_fd_lnk);
+// 		free(fd_lnk);
+// 	}
+// 
+// 	closedir(dp);
+// }
 
 /*
  * This functions verifies, for each process running on the machine, if the
