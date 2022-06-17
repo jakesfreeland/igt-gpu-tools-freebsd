@@ -48,6 +48,9 @@
 # include <pthread.h>
 #endif
 
+/* TODO: FreeBSD - gettid() and getpid() are not the same */
+#define	gettid() getpid()
+
 IGT_TEST_DESCRIPTION("Call drmGetMagic() and drmAuthMagic() and see if it behaves.");
 
 static bool

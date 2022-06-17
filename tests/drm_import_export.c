@@ -45,6 +45,9 @@
 #define DURATION 10
 IGT_TEST_DESCRIPTION("Basic check to verify the behaviour of libdrm bo for prime/flink");
 
+/* TODO: FreeBSD - gettid() and getpid() are not the same */
+#define	gettid() getpid()
+
 int fd;
 drm_intel_bufmgr *bufmgr;
 int fd1;

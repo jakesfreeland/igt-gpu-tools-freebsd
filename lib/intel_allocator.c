@@ -122,6 +122,9 @@ static pid_t allocator_pid = -1;
 extern pid_t child_pid;
 extern __thread pid_t child_tid;
 
+/* TODO: FreeBSD - gettid() and getpid() are not the same */
+#define	gettid() getpid()
+
 /*
  * - for parent process we have child_pid == -1
  * - for child which calls intel_allocator_init() allocator_pid == child_pid

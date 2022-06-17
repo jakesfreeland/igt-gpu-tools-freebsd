@@ -85,6 +85,9 @@
 #include <libgen.h>   /* for basename() on Solaris */
 #endif
 
+/* TODO: FreeBSD - gettid() and getpid() are not the same */
+#define	gettid() getpid()
+
 /**
  * SECTION:igt_core
  * @short_description: Core i-g-t testing support

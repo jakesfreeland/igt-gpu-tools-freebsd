@@ -78,6 +78,9 @@ static void force_low_latency(void)
 
 #define ENGINE_FLAGS  (I915_EXEC_RING_MASK | I915_EXEC_BSD_MASK)
 
+/* TODO: FreeBSD - gettid() and getpid() are not the same */
+#define	gettid() getpid()
+
 static void *gem_busyspin(void *arg)
 {
 	const uint32_t bbe = MI_BATCH_BUFFER_END;

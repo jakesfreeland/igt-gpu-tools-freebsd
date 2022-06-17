@@ -76,6 +76,9 @@
 #include <libgen.h>   /* for dirname() */
 #endif
 
+/* TODO: FreeBSD - gettid() and getpid() are not the same */
+#define	gettid() getpid()
+
 /**
  * SECTION:igt_aux
  * @short_description: Auxiliary libraries and support functions
@@ -176,9 +179,7 @@ static bool igt_sigiter_start(struct __igt_sigiter *iter, bool enable)
 		struct itimerspec its;
 
 		igt_ioctl = sig_ioctl;
-		/* TODO: FreeBSD - USED getpid() instead of gettid() */
-		/* __igt_sigiter.tid = gettid(); */
-		__igt_sigiter.tid = getpid();
+		__igt_sigiter.tid = gettid();
 
 		memset(&sev, 0, sizeof(sev));
 		sev.sigev_notify = SIGEV_SIGNAL | SIGEV_THREAD_ID;
@@ -1468,8 +1469,7 @@ igt_lsof(const char *dpath)
 	if (len > 1 && dpath[len - 1] == '/')
 		sanitized[len - 1] = '\0';
 
-	/* TODO: FreeBSD - libprocps library */
-	/* __igt_lsof(sanitized); */
+	__igt_lsof(sanitized);
 
 	free(sanitized);
 }
@@ -1827,9 +1827,7 @@ void igt_start_siglatency(int sig)
 
 	memset(&sev, 0, sizeof(sev));
 	sev.sigev_notify = SIGEV_SIGNAL | SIGEV_THREAD_ID;
-	/* TODO: FreeBSD - USED getpid() instead of gettid() */
-	/* sev.sigev_notify_thread_id = gettid(); */
-	sev.sigev_notify_thread_id = getpid();
+	sev.sigev_notify_thread_id = gettid();
 	sev.sigev_signo = sig;
 	timer_create(CLOCK_MONOTONIC, &sev, &igt_siglatency.timer);
 
