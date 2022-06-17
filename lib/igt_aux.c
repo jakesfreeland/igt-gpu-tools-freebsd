@@ -176,7 +176,9 @@ static bool igt_sigiter_start(struct __igt_sigiter *iter, bool enable)
 		struct itimerspec its;
 
 		igt_ioctl = sig_ioctl;
-		__igt_sigiter.tid = gettid();
+		/* TODO: FreeBSD - USED getpid() instead of gettid() */
+		/* __igt_sigiter.tid = gettid(); */
+		__igt_sigiter.tid = getpid();
 
 		memset(&sev, 0, sizeof(sev));
 		sev.sigev_notify = SIGEV_SIGNAL | SIGEV_THREAD_ID;
@@ -1824,7 +1826,9 @@ void igt_start_siglatency(int sig)
 
 	memset(&sev, 0, sizeof(sev));
 	sev.sigev_notify = SIGEV_SIGNAL | SIGEV_THREAD_ID;
-	sev.sigev_notify_thread_id = gettid();
+	/* TODO: FreeBSD - USED getpid() instead of gettid() */
+	/* sev.sigev_notify_thread_id = gettid(); */
+	sev.sigev_notify_thread_id = getpid();
 	sev.sigev_signo = sig;
 	timer_create(CLOCK_MONOTONIC, &sev, &igt_siglatency.timer);
 
