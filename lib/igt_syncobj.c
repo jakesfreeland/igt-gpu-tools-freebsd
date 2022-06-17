@@ -27,6 +27,10 @@
 #include "igt.h"
 #include "igt_syncobj.h"
 
+#ifndef ETIME
+#define ETIME ETIMEDOUT
+#endif
+
 /**
  * SECTION:igt_syncobj
  * @short_description: Library with syncobj helpers
