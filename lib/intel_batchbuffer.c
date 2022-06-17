@@ -1603,7 +1603,8 @@ static void __intel_bb_destroy_objects(struct intel_bb *ibb)
 	free(ibb->objects);
 	ibb->objects = NULL;
 
-	tdestroy(ibb->current, free);
+	/* TODO: FreeBSD - NON STD tdestroy() - MEMORY LEAK */
+	/* tdestroy(ibb->current, free); */
 	ibb->current = NULL;
 
 	ibb->num_objects = 0;
@@ -1612,7 +1613,8 @@ static void __intel_bb_destroy_objects(struct intel_bb *ibb)
 
 static void __intel_bb_destroy_cache(struct intel_bb *ibb)
 {
-	tdestroy(ibb->root, free);
+	/* TODO: FreeBSD - NON STD tdestroy - MEMORY LEAK */
+	/* tdestroy(ibb->root, free); */
 	ibb->root = NULL;
 }
 
