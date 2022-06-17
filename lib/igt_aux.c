@@ -1468,7 +1468,8 @@ igt_lsof(const char *dpath)
 	if (len > 1 && dpath[len - 1] == '/')
 		sanitized[len - 1] = '\0';
 
-	__igt_lsof(sanitized);
+	/* TODO: FreeBSD - libprocps library */
+	/* __igt_lsof(sanitized); */
 
 	free(sanitized);
 }
