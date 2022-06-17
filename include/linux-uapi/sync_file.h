@@ -20,6 +20,10 @@
 #include <sys/types.h>
 #endif
 
+#define	__s32	int32_t
+#define __u32	uint32_t
+#define __u64	uint64_t
+
 /**
  * struct sync_merge_data - data passed to merge ioctl
  * @name:	name of new fence
