@@ -360,19 +360,18 @@ static void test_content_protection_on_output(igt_output_t *output,
 // 		if (data.cp_tests & CP_MEI_RELOAD) {
 // 			igt_assert_f(!igt_kmod_unload("mei_hdcp", 0),
 // 				     "mei_hdcp unload failed");
-
-			/* Expected to fail */
-			test_cp_enable_with_retry(output, s, 3,
-						  content_type, true, false);
-
-/* TODO: FreeBSD - libkmod library */
+// 
+// 			/* Expected to fail */
+// 			test_cp_enable_with_retry(output, s, 3,
+// 						  content_type, true, false);
+// 
 // 			igt_assert_f(!igt_kmod_load("mei_hdcp", NULL),
 // 				     "mei_hdcp load failed");
-
-			/* Expected to pass */
-			test_cp_enable_with_retry(output, s, 3,
-						  content_type, false, false);
-		}
+// 
+// 			/* Expected to pass */
+// 			test_cp_enable_with_retry(output, s, 3,
+// 						  content_type, false, false);
+// 		}
 
 		if (data.cp_tests & CP_LIC)
 			test_cp_lic(output);
