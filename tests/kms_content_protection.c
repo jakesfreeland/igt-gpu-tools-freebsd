@@ -24,7 +24,9 @@
 
 #include <poll.h>
 #include <fcntl.h>
+#ifdef __linux__
 #include <sys/epoll.h>
+#endif
 #include <sys/stat.h>
 #include <libudev.h>
 #include "igt.h"
