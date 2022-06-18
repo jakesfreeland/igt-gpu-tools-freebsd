@@ -35,7 +35,7 @@
 #if defined(__linux__)
 #include <linux/limits.h>
 #elif defined(__FreeBSD__)
-#include <sys/limits.h>
+#include <sys/syslimits.h>
 #endif
 #include <sys/stat.h>
 #include <sys/types.h>

@@ -25,6 +25,9 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#ifdef __FreeBSD__
+#include <sys/syslimits.h>
+#endif
 
 #define THRESHOLD_PER_CONNECTOR	10
 #define THRESHOLD_TOTAL		50

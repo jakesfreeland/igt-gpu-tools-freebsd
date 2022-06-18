@@ -31,6 +31,9 @@
 #include <cairo.h>
 #include <gsl/gsl_statistics_double.h>
 #include <gsl/gsl_fit.h>
+#ifdef __FreeBSD__
+#include <sys/syslimits.h>
+#endif
 
 #include "igt_frame.h"
 #include "igt_core.h"

@@ -30,6 +30,9 @@
 #include <fcntl.h>
 #include <gsl/gsl_fft_real.h>
 #include <math.h>
+#ifdef __FreeBSD__
+#include <sys/syslimits.h>
+#endif
 #include <unistd.h>
 
 #include "igt_audio.h"

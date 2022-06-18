@@ -31,6 +31,9 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#ifdef __FreeBSD__
+#include <sys/syslimits.h>
+#endif
 
 #include "igt_core.h"
 #include "igt_eld.h"
