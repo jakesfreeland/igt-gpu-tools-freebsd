@@ -88,6 +88,9 @@
 /* TODO: FreeBSD - gettid() and getpid() are not the same */
 #define	gettid() getpid()
 
+/* TODO: FreeBSD -  pthread_sigqueue() and sigqueue() are not the same */
+#define	pthread_sigqueue(tid, signo, value)	sigqueue(tid, signo, value)
+
 /**
  * SECTION:igt_core
  * @short_description: Core i-g-t testing support
