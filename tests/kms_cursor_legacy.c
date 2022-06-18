@@ -47,6 +47,10 @@
 
 #define PAGE_SIZE	4096
 
+#ifndef SCHED_IDLE
+#define	SCHED_IDLE	SCHED_OTHER
+#endif
+
 IGT_TEST_DESCRIPTION("Stress legacy cursor ioctl");
 
 igt_pipe_crc_t *pipe_crc;
