@@ -26,7 +26,9 @@
 #include <signal.h>
 #include <pthread.h>
 #include <sys/poll.h>
+#ifdef __linux__
 #include <sys/timerfd.h>
+#endif
 
 #include <i915_drm.h>
 
@@ -521,39 +523,40 @@ static void *timer_thread(void *data)
  * Specify a timeout. This ends the recursive batch associated with @spin after
  * the timeout has elapsed.
  */
+/* TODO: FreeBSD - REPLACE timerfd WITH POSIX timer */
 void igt_spin_set_timeout(igt_spin_t *spin, int64_t ns)
 {
-	struct sched_param param = { .sched_priority = 99 };
-	struct itimerspec its;
-	pthread_attr_t attr;
-	int timerfd;
-
-	if (!spin)
-		return;
-
-	if (ns <= 0) {
-		igt_spin_end(spin);
-		return;
-	}
-
-	igt_assert(spin->timerfd == -1);
-	timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
-	igt_assert(timerfd >= 0);
-	spin->timerfd = timerfd;
-
-	pthread_attr_init(&attr);
-	pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
-	pthread_attr_setschedpolicy(&attr, SCHED_FIFO);
-	pthread_attr_setschedparam(&attr, &param);
-
-	igt_assert(pthread_create(&spin->timer_thread, &attr,
-				  timer_thread, spin) == 0);
-	pthread_attr_destroy(&attr);
-
-	memset(&its, 0, sizeof(its));
-	its.it_value.tv_sec = ns / NSEC_PER_SEC;
-	its.it_value.tv_nsec = ns % NSEC_PER_SEC;
-	igt_assert(timerfd_settime(timerfd, 0, &its, NULL) == 0);
+// 	struct sched_param param = { .sched_priority = 99 };
+// 	struct itimerspec its;
+// 	pthread_attr_t attr;
+// 	int timerfd;
+// 
+// 	if (!spin)
+// 		return;
+// 
+// 	if (ns <= 0) {
+// 		igt_spin_end(spin);
+// 		return;
+// 	}
+// 
+// 	igt_assert(spin->timerfd == -1);
+// 	timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
+// 	igt_assert(timerfd >= 0);
+// 	spin->timerfd = timerfd;
+// 
+// 	pthread_attr_init(&attr);
+// 	pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED);
+// 	pthread_attr_setschedpolicy(&attr, SCHED_FIFO);
+// 	pthread_attr_setschedparam(&attr, &param);
+// 
+// 	igt_assert(pthread_create(&spin->timer_thread, &attr,
+// 				  timer_thread, spin) == 0);
+// 	pthread_attr_destroy(&attr);
+// 
+// 	memset(&its, 0, sizeof(its));
+// 	its.it_value.tv_sec = ns / NSEC_PER_SEC;
+// 	its.it_value.tv_nsec = ns % NSEC_PER_SEC;
+// 	igt_assert(timerfd_settime(timerfd, 0, &its, NULL) == 0);
 }
 
 static void sync_write(igt_spin_t *spin, uint32_t value)
