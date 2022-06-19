@@ -53,6 +53,9 @@
 #define BLT_WRITE_ALPHA		(1<<21)
 #define BLT_WRITE_RGB		(1<<20)
 
+/* TODO: FreeBSD - gettid() and getpid() are not the same */
+#define	gettid() getpid()
+
 static uint32_t devid;
 static bool has_64bit_relocations;
 static bool has_softpin;
