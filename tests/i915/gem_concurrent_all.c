@@ -53,6 +53,15 @@
 #include "igt.h"
 #include "igt_vgem.h"
 
+/*
+ * TODO: FreeBSD - NOSYNC will stop the data from being flushed
+ * achieving a similar effect to DONTFORK. This is a temporary
+ * solution. FIXME!
+ */
+#ifndef	MADV_DONTFORK
+#define	MADV_DONTFORK	MADV_NOSYNC
+#endif
+
 IGT_TEST_DESCRIPTION("Test of pread/pwrite/mmap behavior when writing to active"
 		     " buffers.");
 
