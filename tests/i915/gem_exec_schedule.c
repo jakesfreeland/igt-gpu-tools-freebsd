@@ -2511,10 +2511,11 @@ static void test_pi_ringfull(int fd, const intel_ctx_cfg_t *cfg,
 	munmap(result, 4096);
 }
 
-static int userfaultfd(int flags)
-{
-	return syscall(SYS_userfaultfd, flags);
-}
+/* TODO: FreeBSD - SYS_userfaultfd absent */
+// static int userfaultfd(int flags)
+// {
+// 	return syscall(SYS_userfaultfd, flags);
+// }
 
 struct ufd_thread {
 	uint32_t batch;
