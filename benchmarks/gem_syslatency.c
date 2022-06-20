@@ -49,7 +49,9 @@
 #include "i915/gem_create.h"
 #include "i915/gem_ring.h"
 
+#ifndef	sigev_notify_thread_id
 #define sigev_notify_thread_id _sigev_un._tid
+#endif
 
 static volatile int done;
 

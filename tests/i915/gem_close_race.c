@@ -62,7 +62,9 @@ static bool has_softpin;
 static uint64_t exec_addr;
 static uint64_t data_addr;
 
+#ifndef	sigev_notify_thread_id
 #define sigev_notify_thread_id _sigev_un._tid
+#endif
 
 static void selfcopy(int fd, uint32_t ctx, uint32_t handle, int loops)
 {
