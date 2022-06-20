@@ -2343,7 +2343,9 @@ static void bind_to_cpu(int cpu)
 	struct sched_param rt = {.sched_priority = 99 };
 	cpu_set_t allowed;
 
-	igt_assert(sched_setscheduler(getpid(), SCHED_RR | SCHED_RESET_ON_FORK, &rt) == 0);
+	/* TODO: FreeBSD - SCHED_RESET_ON_FORK absent */
+	/* igt_assert(sched_setscheduler(getpid(), SCHED_RR | SCHED_RESET_ON_FORK, &rt) == 0); */
+	igt_assert(sched_setscheduler(getpid(), SCHED_RR, &rt) == 0);
 
 	CPU_ZERO(&allowed);
 	CPU_SET(cpu % ncpus, &allowed);

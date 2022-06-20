@@ -542,7 +542,9 @@ static void wakeup_latency(int i915, const intel_ctx_t *ctx,
 
 	{
 		struct sched_param p = { .sched_priority = 99 };
-		sched_setscheduler(0, SCHED_FIFO | SCHED_RESET_ON_FORK, &p);
+		/* TODO: FreeBSD - SCHED_RESET_ON_FORK absent */
+		/* sched_setscheduler(0, SCHED_FIFO | SCHED_RESET_ON_FORK, &p); */
+		sched_setscheduler(0, SCHED_FIFO, &p);
 	}
 
 	igt_mean_init(&wakeup);
@@ -649,7 +651,9 @@ static void rthog_latency_on_ring(int fd, const intel_ctx_t *ctx,
 				{ .sched_priority = 99 };
 
 				ret = sched_setscheduler(0,
-							 SCHED_FIFO | SCHED_RESET_ON_FORK,
+							 /* TODO: FreeBSD - SCHED_RESET_ON_FORK ABSENT */
+							 /* SCHED_FIFO | SCHED_RESET_ON_FORK, */
+							 SCHED_FIFO,
 							 &rt);
 				if (ret) {
 					igt_warn("Failed to set scheduling policy!\n");
