@@ -57,6 +57,14 @@
 #define	mmap64(addr, len, prot, flags, fd, offset) \
 	mmap(addr, len, prot, flags, fd, offset)
 
+#ifdef __FreeBSD__
+#define PTRACE_TRACEME  PT_TRACE_ME
+#define PTRACE_ATTACH   PT_ATTACH
+#define	PTRACE_PEEKDATA PT_READ_D
+#define PTRACE_POKEDATA PT_WRITE_D
+#define PTRACE_DETACH   PT_DETACH
+#endif
+
 static int OBJECT_SIZE = 16*1024*1024;
 
 static void
@@ -567,7 +575,7 @@ test_ptrace(int fd)
 	for (int i = 0; i < sz / sizeof(long); i++) {
 		long ret;
 
-		ret = ptrace(PTRACE_PEEKDATA, pid, gtt + i);
+		ret = ptrace(PTRACE_PEEKDATA, pid, gtt + i, NULL);
 		igt_assert_eq_u64(ret, CC);
 		cpy[i] = ret;
 
