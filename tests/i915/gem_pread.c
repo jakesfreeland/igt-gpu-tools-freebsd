@@ -80,10 +80,11 @@ static void pread_self(int i915)
 	}
 }
 
-static int userfaultfd(int flags)
-{
-	return syscall(SYS_userfaultfd, flags);
-}
+/* TODO: FreeBSD - SYS_userfaultfd absent */
+// static int userfaultfd(int flags)
+// {
+// 	return syscall(SYS_userfaultfd, flags);
+// }
 
 struct ufd_thread {
 	uint32_t *page;

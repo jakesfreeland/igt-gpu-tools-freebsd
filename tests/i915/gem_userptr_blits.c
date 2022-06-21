@@ -2157,10 +2157,11 @@ static void *ufd_thread(void *arg)
 	return NULL;
 }
 
-static int userfaultfd(int flags)
-{
-	return syscall(SYS_userfaultfd, flags);
-}
+/* TODO: FreeBSD - SYS_userfaultfd absent */
+// static int userfaultfd(int flags)
+// {
+// 	return syscall(SYS_userfaultfd, flags);
+// }
 
 static bool has_userptr_probe(int fd)
 {
