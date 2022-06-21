@@ -255,7 +255,8 @@ static void load_and_check_i915(void)
 // 	error = igt_i915_driver_load(NULL);
 	hda_dynamic_debug(false);
 
-	igt_assert_eq(error, 0);
+/* TODO: FreeBSD - libkmod library */
+// 	igt_assert_eq(error, 0);
 
 	/* driver is ready, check if it's bound */
 	drm_fd = __drm_open_driver(DRIVER_INTEL);
