@@ -773,7 +773,7 @@ static void test_huge_split(int i915)
 		igt_require_f(flags, "memfd not supported\n");
 		flags = 0;
 	} while (1);
-	madvise(addr, sz, MADV_HUGEPAGE);
+	/* madvise(addr, sz, MADV_HUGEPAGE); */
 
 	gem_userptr(i915, addr + sz / 2 - 4096, 8192, 0, userptr_flags, &handle);
 	spin = igt_spin_new(i915, .ahnd = ahnd, .dependency = handle,
@@ -781,10 +781,12 @@ static void test_huge_split(int i915)
 	igt_assert(gem_bo_busy(i915, handle));
 
 	igt_assert(mmap(addr, 4096, PROT_READ,
-			MAP_FIXED | MAP_SHARED | MAP_ANONYMOUS, -1, 0) !=
+			/* MAP_FIXED | MAP_SHARED | MAP_ANONYMOUS, -1, 0) != */
+			MAP_ALIGNED_SUPER | MAP_FIXED | MAP_SHARED | MAP_ANONYMOUS, -1, 0) !=
 		   MAP_FAILED);
 	igt_assert(mmap(addr + sz - 4096, 4096, PROT_READ,
-			MAP_FIXED | MAP_SHARED | MAP_ANONYMOUS, -1, 0) !=
+			/* MAP_FIXED | MAP_SHARED | MAP_ANONYMOUS, -1, 0) != */
+			MAP_ALIGNED_SUPER | MAP_FIXED | MAP_SHARED | MAP_ANONYMOUS, -1, 0) !=
 		   MAP_FAILED);
 
 	igt_spin_end(spin);
@@ -1873,13 +1875,14 @@ static void *mm_stress_thread(void *data)
 
 	while (!stdata->stop) {
 		ptr = mmap(NULL, sz, PROT_READ | PROT_WRITE,
-			   MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+			   /* MAP_ANONYMOUS | MAP_PRIVATE, -1, 0); */
+			   MAP_ALIGNED_SUPER | MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 		if (ptr == MAP_FAILED) {
 			stdata->exit_code = -EFAULT;
 			break;
 		}
 
-		madvise(ptr, sz, MADV_HUGEPAGE);
+		/* madvise(ptr, sz, MADV_HUGEPAGE); */
 		for (size_t page = 0; page < sz; page += PAGE_SIZE)
 			*(volatile uint32_t *)((unsigned char *)ptr + page) = 0;
 

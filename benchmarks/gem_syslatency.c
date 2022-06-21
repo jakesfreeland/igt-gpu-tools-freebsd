@@ -212,10 +212,11 @@ static void *sys_thp_alloc(void *arg)
 		void *ptr;
 
 		ptr = mmap(NULL, sz,
-			   PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS,
+			   /* PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, */
+			   PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_ALIGNED_SUPER,
 			   -1, 0);
 		assert(ptr != MAP_FAILED);
-		madvise(ptr, sz, MADV_HUGEPAGE);
+		/* madvise(ptr, sz, MADV_HUGEPAGE); */
 		for (size_t page = 0; page < sz; page += PAGE_SIZE)
 			*(volatile uint32_t *)((unsigned char *)ptr + page) = 0;
 		munmap(ptr, sz);
