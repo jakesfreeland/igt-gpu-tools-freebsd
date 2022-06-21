@@ -45,7 +45,7 @@ IGT_TEST_DESCRIPTION("Checks that the kernel reports EFAULT when trying to use"
 #define OBJECT_SIZE (1024*1024)
 
 #ifndef	sighandler_t
-#define sighandler_t	__sighandler_t *
+#define sighandler_t	sig_t
 #endif
 
 /*
