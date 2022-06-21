@@ -38,6 +38,10 @@
 #define MADV_FREE 8
 #endif
 
+#ifndef	MAP_POPULATE
+#define	MAP_POPULATE	MAP_PREFAULT_READ
+#endif
+
 static void get_pages(int fd, uint64_t alloc)
 {
 	uint32_t handle = gem_create(fd, alloc);

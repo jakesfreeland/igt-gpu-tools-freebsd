@@ -53,6 +53,10 @@
 #define sigev_notify_thread_id _sigev_un._tid
 #endif
 
+#ifndef	MAP_POPULATE
+#define	MAP_POPULATE	MAP_PREFAULT_READ
+#endif
+
 static volatile int done;
 
 struct gem_busyspin {

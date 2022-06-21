@@ -34,7 +34,9 @@ IGT_TEST_DESCRIPTION("Exercise local memory swapping.");
 #define PAGE_SIZE  (1ULL << 12)
 #define SZ_64K	   (16 * PAGE_SIZE)
 
+#ifndef	MAP_POPULATE
 #define	MAP_POPULATE	MAP_PREFAULT_READ
+#endif
 
 static const char *readable_unit(uint64_t size)
 {
