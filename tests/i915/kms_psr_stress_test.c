@@ -6,7 +6,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#ifdef __linux__
 #include <sys/timerfd.h>
+#endif
 
 #define INVALIDATES_PER_SEC 15
 #define FLIPS_PER_SEC 30
@@ -187,22 +189,25 @@ static void prepare(data_t *data)
 	interval.it_value.tv_sec = 0;
 	interval.it_interval.tv_nsec = interval.it_value.tv_nsec;
 	interval.it_interval.tv_sec = interval.it_value.tv_sec;
-	r = timerfd_settime(data->invalidate_timerfd, 0, &interval, NULL);
-	igt_require_f(r != -1, "Error setting invalidate_timerfd\n");
+	/* TODO: FreeBSD - REPLACE timerfd WITH POSIX timer */
+// 	r = timerfd_settime(data->invalidate_timerfd, 0, &interval, NULL);
+// 	igt_require_f(r != -1, "Error setting invalidate_timerfd\n");
 
 	interval.it_value.tv_nsec = NSEC_PER_SEC / FLIPS_PER_SEC;
 	interval.it_value.tv_sec = 0;
 	interval.it_interval.tv_nsec = interval.it_value.tv_nsec;
 	interval.it_interval.tv_sec = interval.it_value.tv_sec;
-	r = timerfd_settime(data->flip_timerfd, 0, &interval, NULL);
-	igt_require_f(r != -1, "Error setting flip_timerfd\n");
+	/* TODO: FreeBSD - REPLACE timerfd WITH POSIX timer */
+// 	r = timerfd_settime(data->flip_timerfd, 0, &interval, NULL);
+// 	igt_require_f(r != -1, "Error setting flip_timerfd\n");
 
 	interval.it_value.tv_nsec = 0;
 	interval.it_value.tv_sec = SECS_TO_COMPLETE_TEST;
 	interval.it_interval.tv_nsec = interval.it_value.tv_nsec;
 	interval.it_interval.tv_sec = interval.it_value.tv_sec;
-	r = timerfd_settime(data->completed_timerfd, 0, &interval, NULL);
-	igt_require_f(r != -1, "Error setting completed_timerfd\n");
+	/* TODO: FreeBSD - REPLACE timerfd WITH POSIX timer */
+// 	r = timerfd_settime(data->completed_timerfd, 0, &interval, NULL);
+// 	igt_require_f(r != -1, "Error setting completed_timerfd\n");
 
 	data->initial_state = psr_get_mode(data->debugfs_fd);
 	igt_require(data->initial_state != PSR_DISABLED);
@@ -232,9 +237,10 @@ static void cleanup(data_t *data)
 	interval.it_value.tv_sec = 0;
 	interval.it_interval.tv_nsec = interval.it_value.tv_nsec;
 	interval.it_interval.tv_sec = interval.it_value.tv_sec;
-	timerfd_settime(data->invalidate_timerfd, 0, &interval, NULL);
-	timerfd_settime(data->flip_timerfd, 0, &interval, NULL);
-	timerfd_settime(data->completed_timerfd, 0, &interval, NULL);
+	/* TODO: FreeBSD - REPLACE timerfd WITH POSIX timer */
+// 	timerfd_settime(data->invalidate_timerfd, 0, &interval, NULL);
+// 	timerfd_settime(data->flip_timerfd, 0, &interval, NULL);
+// 	timerfd_settime(data->completed_timerfd, 0, &interval, NULL);
 }
 
 static void invalidate(data_t *data)
@@ -336,12 +342,13 @@ igt_main
 
 		setup_output(&data);
 
-		data.invalidate_timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
-		igt_require(data.invalidate_timerfd != -1);
-		data.flip_timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
-		igt_require(data.flip_timerfd != -1);
-		data.completed_timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
-		igt_require(data.completed_timerfd != -1);
+		/* TODO: FreeBSD - REPLACE timerfd WITH POSIX timer */
+// 		data.invalidate_timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
+// 		igt_require(data.invalidate_timerfd != -1);
+// 		data.flip_timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
+// 		igt_require(data.flip_timerfd != -1);
+// 		data.completed_timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
+// 		igt_require(data.completed_timerfd != -1);
 	}
 
 	/*

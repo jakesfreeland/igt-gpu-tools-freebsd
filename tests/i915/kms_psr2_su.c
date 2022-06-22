@@ -29,7 +29,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#ifdef __linux__
 #include <sys/timerfd.h>
+#endif
 
 IGT_TEST_DESCRIPTION("Test PSR2 selective update");
 
@@ -295,15 +297,17 @@ igt_main
 		igt_require_f(r, "PSR2 can not be enabled\n");
 
 		/* blocking timerfd */
-		data.change_screen_timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
-		igt_require(data.change_screen_timerfd != -1);
+/* TODO: FreeBSD - REPLACE timerfd WITH POSIX timer */
+// 		data.change_screen_timerfd = timerfd_create(CLOCK_MONOTONIC, 0);
+// 		igt_require(data.change_screen_timerfd != -1);
 		/* Changing screen at 30hz to support 30hz panels */
 		interval.it_value.tv_nsec = NSEC_PER_SEC / 30;
 		interval.it_value.tv_sec = 0;
 		interval.it_interval.tv_nsec = interval.it_value.tv_nsec;
 		interval.it_interval.tv_sec = interval.it_value.tv_sec;
-		r = timerfd_settime(data.change_screen_timerfd, 0, &interval, NULL);
-		igt_require_f(r != -1, "Error setting timerfd\n");
+/* TODO: FreeBSD - REPLACE timerfd WITH POSIX timer */
+// 		r = timerfd_settime(data.change_screen_timerfd, 0, &interval, NULL);
+// 		igt_require_f(r != -1, "Error setting timerfd\n");
 	}
 
 	for (data.op = PAGE_FLIP; data.op < LAST; data.op++) {
