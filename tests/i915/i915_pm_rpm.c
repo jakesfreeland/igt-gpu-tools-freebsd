@@ -45,6 +45,7 @@
 #include <linux/i2c-dev.h>
 #elif defined(__freebsd__)
 #include <dev/iicbus/iic.h>
+#include <sys/syslimits.h>
 #endif
 #include <drm.h>
 
@@ -65,6 +66,10 @@
 #define MAX_CONNECTORS	32
 #define MAX_ENCODERS	32
 #define MAX_CRTCS	16
+
+#ifndef	I2C_RDWR
+#define	I2C_RDWR	I2CRDWR
+#endif
 
 enum pc8_status {
 	PC8_ENABLED,
@@ -667,20 +672,39 @@ static bool i2c_read_edid(const char *connector_name, unsigned char *edid)
 	char i2c_path[PATH_MAX];
 	bool result;
 	int rc, fd;
-	struct i2c_msg msgs[] = {
+/* TODO: FreeBSD - i2c -> iic */
+// 	struct i2c_msg msgs[] = {
+// 		{ /* Start at 0. */
+// 			.addr = 0x50,
+// 			.flags = 0,
+// 			.len = 1,
+// 			.buf = edid,
+// 		}, { /* Now read the EDID. */
+// 			.addr = 0x50,
+// 			.flags = I2C_M_RD,
+// 			.len = 128,
+// 			.buf = edid,
+// 		}
+// 	};
+	struct iic_msg msgs[] = {
 		{ /* Start at 0. */
-			.addr = 0x50,
+			.slave = 0x50,
 			.flags = 0,
 			.len = 1,
-			.buf = edid,
+			.buf = edid
 		}, { /* Now read the EDID. */
-			.addr = 0x50,
-			.flags = I2C_M_RD,
+			.slave = 0x50,
+			.flags = IIC_M_RD,
 			.len = 128,
-			.buf = edid,
+			.buf = edid
 		}
 	};
-	struct i2c_rdwr_ioctl_data msgset = {
+/* TODO: FreeBSD - i2c -> iic */
+// 	struct i2c_rdwr_ioctl_data msgset = {
+// 		.msgs = msgs,
+// 		.nmsgs = 2,
+// 	};
+	struct iic_rdwr_data msgset = {
 		.msgs = msgs,
 		.nmsgs = 2,
 	};
