@@ -50,6 +50,10 @@
 #include "igt_aux.h"
 #include "ioctl_wrappers.h"
 
+#ifndef HAVE_SIGHANDLER_T
+#define	sighandler_t	sig_t
+#endif
+
 IGT_TEST_DESCRIPTION("This is a test for the generic dumb buffer interface.");
 
 static int __dumb_create(int fd, struct drm_mode_create_dumb *create)

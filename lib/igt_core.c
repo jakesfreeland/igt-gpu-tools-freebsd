@@ -2468,7 +2468,7 @@ void igt_waitchildren_timeout(int seconds, const char *reason)
 #define MAX_EXIT_HANDLERS	10
 
 #ifndef HAVE_SIGHANDLER_T
-typedef void (*sighandler_t)(int);
+#define	sighandler_t	sig_t
 #endif
 
 static struct {

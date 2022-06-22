@@ -45,6 +45,10 @@
 #define ATTR "heartbeat_interval_ms"
 #define RESET_TIMEOUT 50 /* milliseconds, at least one jiffie for kworker */
 
+#ifndef HAVE_SIGHANDLER_T
+#define	sighandler_t	sig_t
+#endif
+
 static bool __enable_hangcheck(int dir, bool state)
 {
 	return igt_sysfs_set(dir, "enable_hangcheck", state ? "1" : "0");
