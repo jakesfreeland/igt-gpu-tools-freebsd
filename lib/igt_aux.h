@@ -51,6 +51,11 @@
 #define sigev_notify_thread_id _sigev_un._tid
 #endif
 
+/* TODO: FreeBSD - TEMPORARY */
+typedef struct {
+	uint16_t empty;
+} proc_t;
+
 /* auxialiary igt helpers from igt_aux.c */
 /* generally useful helpers */
 void igt_fork_signal_helper(void);
