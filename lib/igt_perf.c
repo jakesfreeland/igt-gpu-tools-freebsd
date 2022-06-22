@@ -102,30 +102,30 @@ uint64_t igt_perf_type_id(const char *device)
 static int
 _perf_open(uint64_t type, uint64_t config, int group, uint64_t format)
 {
-/* TODO: FreeBSD - PERFORMANCE METRICS */
-// 	struct perf_event_attr attr = { };
-// 	/* int nr_cpus = get_nprocs_conf(); */
-// 	long nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
-// 	int cpu = 0, ret;
-// 
-// 	attr.type = type;
-// 	if (attr.type == 0)
-// 		return -ENOENT;
-// 
+	struct perf_event_attr attr = { };
+	/* TODO: FreeBSD - NCPU */
+	/* int nr_cpus = get_nprocs_conf(); */
+	long nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
+	int cpu = 0, ret;
+
+	attr.type = type;
+	if (attr.type == 0)
+		return -ENOENT;
+
+	/* TODO: FreeBSD - PERF_FORMAT_GROUP not defined */
 // 	if (group >= 0)
 // 		format &= ~PERF_FORMAT_GROUP;
-// 
-// 	attr.read_format = format;
-// 	attr.config = config;
-// 	attr.use_clockid = 1;
-// 	attr.clockid = CLOCK_MONOTONIC;
-// 
-// 	do {
-// 		ret = perf_event_open(&attr, -1, cpu++, group, 0);
-// 	} while ((ret < 0 && errno == EINVAL) && (cpu < nr_cpus));
-// 
-// 	return ret;
-	return -1;
+
+	attr.read_format = format;
+	attr.config = config;
+	attr.use_clockid = 1;
+	attr.clockid = CLOCK_MONOTONIC;
+
+	do {
+		ret = perf_event_open(&attr, -1, cpu++, group, 0);
+	} while ((ret < 0 && errno == EINVAL) && (cpu < nr_cpus));
+
+	return ret;
 }
 
 int perf_igfx_open(uint64_t config)
