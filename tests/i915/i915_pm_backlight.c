@@ -26,6 +26,9 @@
  */
 
 #include "igt.h"
+#ifdef __FreeBSD__
+#include <libgen.h>
+#endif
 #include <limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
