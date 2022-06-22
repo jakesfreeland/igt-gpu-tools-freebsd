@@ -43,7 +43,7 @@
 #if defined(__linux__)
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
-#elif defined(__freebsd__)
+#elif defined(__FreeBSD__)
 #include <dev/iicbus/iic.h>
 #include <sys/syslimits.h>
 #endif
