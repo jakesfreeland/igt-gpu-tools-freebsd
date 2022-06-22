@@ -21,13 +21,13 @@
  * IN THE SOFTWARE.
  */
 
-/* TODO: FreeBSD - libkmod library */
-// #include "igt.h"
-// #include "igt_kmod.h"
-// 
-// IGT_TEST_DESCRIPTION("Kernel selftests for the dmabuf API");
-// 
-// igt_main
-// {
-// 	igt_kselftests("dmabuf_selftests", NULL, NULL, NULL);
-// }
+#include "igt.h"
+#include "igt_kmod.h"
+
+IGT_TEST_DESCRIPTION("Kernel selftests for the dmabuf API");
+
+igt_main
+{
+	/* TODO: FreeBSD - DMABUF, libkmod */
+	/* igt_kselftests("dmabuf_selftests", NULL, NULL, NULL); */
+}
