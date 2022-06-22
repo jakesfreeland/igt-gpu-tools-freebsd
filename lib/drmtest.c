@@ -304,8 +304,8 @@ static int __search_and_open(const char *base, int offset, unsigned int chipset,
 }
 
 /* TODO: FreeBSD - libkmod library */
-// void drm_load_module(unsigned int chipset)
-// {
+void drm_load_module(unsigned int chipset)
+{
 // 	static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 // 
 // 	pthread_mutex_lock(&mutex);
@@ -318,7 +318,7 @@ static int __search_and_open(const char *base, int offset, unsigned int chipset,
 // 		}
 // 	}
 // 	pthread_mutex_unlock(&mutex);
-// }
+}
 
 static int __open_driver(const char *base, int offset, unsigned int chipset, int as_idx)
 {

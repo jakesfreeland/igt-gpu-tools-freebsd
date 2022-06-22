@@ -1195,8 +1195,8 @@ void igt_unlock_mem(void)
  * This function checks in the process table for an entry with the name @comm.
  */
 /* TODO: FreeBSD - libprocps library */
-// int igt_is_process_running(const char *comm)
-// {
+int igt_is_process_running(const char *comm)
+{
 // 	PROCTAB *proc;
 // 	proc_t *proc_info;
 // 	bool found = false;
@@ -1215,7 +1215,8 @@ void igt_unlock_mem(void)
 // 
 // 	closeproc(proc);
 // 	return found;
-// }
+	return -1;
+}
 
 /**
  * igt_terminate_process:
@@ -1230,8 +1231,8 @@ void igt_unlock_mem(void)
  * with name @comm.
  */
 /* TODO: FreeBSD - libprocps library */
-// int igt_terminate_process(int sig, const char *comm)
-// {
+int igt_terminate_process(int sig, const char *comm)
+{
 // 	PROCTAB *proc;
 // 	proc_t *proc_info;
 // 	int err = 0;
@@ -1253,7 +1254,8 @@ void igt_unlock_mem(void)
 // 
 // 	closeproc(proc);
 // 	return err;
-// }
+	return -1;
+}
 
 struct pinfo {
 	pid_t pid;
@@ -1322,9 +1324,9 @@ igt_show_stat_header(void)
 }
 
 /* TODO: FreeBSD - libprocps library */
-// static void
-// igt_show_stat(proc_t *info, int *state, const char *fn)
-// {
+static void
+igt_show_stat(proc_t *info, int *state, const char *fn)
+{
 // 	struct pinfo p = { .pid = info->tid, .comm = info->cmd, .fn = fn };
 // 
 // 	if (!*state)
@@ -1332,12 +1334,12 @@ igt_show_stat_header(void)
 // 
 // 	__igt_show_stat(&p);
 // 	++*state;
-// }
+}
 
 /* TODO: FreeBSD - libprocps library */
-// static void
-// __igt_lsof_fds(proc_t *proc_info, int *state, char *proc_path, const char *dir)
-// {
+static void
+__igt_lsof_fds(proc_t *proc_info, int *state, char *proc_path, const char *dir)
+{
 // 	struct dirent *d;
 // 	struct stat st;
 // 	char path[PATH_MAX];
@@ -1390,16 +1392,16 @@ igt_show_stat_header(void)
 // 	}
 // 
 // 	closedir(dp);
-// }
+}
 
 /*
  * This functions verifies, for each process running on the machine, if the
  * current working directory or the fds matches the one supplied in dir.
  */
 /* TODO: FreeBSD - libprocps library */
-// static void
-// __igt_lsof(const char *dir)
-// {
+static void
+__igt_lsof(const char *dir)
+{
 // 	PROCTAB *proc;
 // 	proc_t *proc_info;
 // 
@@ -1440,7 +1442,7 @@ igt_show_stat_header(void)
 // 	}
 // 
 // 	closeproc(proc);
-// }
+}
 
 /**
  * igt_lsof: Lists information about files opened by processes.
@@ -1476,8 +1478,8 @@ igt_lsof(const char *dpath)
 }
 
 /* TODO: FreeBSD - libprocps library */
-// static void pulseaudio_unload_module(proc_t *proc_info)
-// {
+static void pulseaudio_unload_module(proc_t *proc_info)
+{
 // 	struct igt_helper_process pa_proc = {};
 // 	char xdg_dir[PATH_MAX];
 // 	const char *homedir;
@@ -1499,15 +1501,15 @@ igt_lsof(const char *dpath)
 // 		system("for i in $(pacmd list-sources|grep module:|cut -d : -f 2); do pactl unload-module $i; done");
 // 	}
 // 	igt_wait_helper(&pa_proc);
-// }
+}
 
 static int pipewire_pulse_pid = 0;
 static int pipewire_pw_reserve_pid = 0;
 static struct igt_helper_process pw_reserve_proc = {};
 
 /* TODO: FreeBSD - libprocps library */
-// static void pipewire_reserve_wait(void)
-// {
+static void pipewire_reserve_wait(void)
+{
 // 	char xdg_dir[PATH_MAX];
 // 	const char *homedir;
 // 	struct passwd *pw;
@@ -1549,14 +1551,14 @@ static struct igt_helper_process pw_reserve_proc = {};
 // 		 */
 // 		exit(system("pw-reserve -n Audio0 -r"));
 // 	}
-// }
+}
 
 /* Maximum time waiting for pw-reserve to start running */
 #define PIPEWIRE_RESERVE_MAX_TIME 1000 /* milisseconds */
 
 /* TODO: FreeBSD - libprocps library */
-// int pipewire_pulse_start_reserve(void)
-// {
+int pipewire_pulse_start_reserve(void)
+{
 // 	bool is_pw_reserve_running = false;
 // 	proc_t *proc_info;
 // 	int attempts = 0;
@@ -1602,7 +1604,8 @@ static struct igt_helper_process pw_reserve_proc = {};
 // 	 */
 // 
 // 	return 0;
-// }
+	return -1;
+}
 
 void pipewire_pulse_stop_reserve(void)
 {
@@ -1633,9 +1636,9 @@ void pipewire_pulse_stop_reserve(void)
  * If the check fails, it means that the process can simply be killed.
  */
 /* TODO: FreeBSD - libprocps library */
-// static int
-// __igt_lsof_audio_and_kill_proc(proc_t *proc_info, char *proc_path)
-// {
+static int
+__igt_lsof_audio_and_kill_proc(proc_t *proc_info, char *proc_path)
+{
 // 	const char *audio_dev = "/dev/snd/";
 // 	char path[PATH_MAX * 2];
 // 	struct dirent *d;
@@ -1734,7 +1737,8 @@ void pipewire_pulse_stop_reserve(void)
 // 
 // 	closedir(dp);
 // 	return fail;
-// }
+	return -1;
+}
 
 /*
  * This function identifies each process running on the machine that is
@@ -1744,9 +1748,9 @@ void pipewire_pulse_stop_reserve(void)
  * daemons are respanned if they got killed.
  */
 /* TODO: FreeBSD - libprocps library */
-// int
-// igt_lsof_kill_audio_processes(void)
-// {
+int
+igt_lsof_kill_audio_processes(void)
+{
 // 	char path[PATH_MAX];
 // 	proc_t *proc_info;
 // 	PROCTAB *proc;
@@ -1767,7 +1771,8 @@ void pipewire_pulse_stop_reserve(void)
 // 	closeproc(proc);
 // 
 // 	return fail;
-// }
+	return -1;
+}
 
 static struct igt_siglatency {
 	timer_t timer;
