@@ -23,6 +23,7 @@
 
 /* TODO: FreeBSD - FBDEV COMPAT */
 #ifdef __linux__
+
 #include "config.h"
 
 #include "igt.h"
@@ -448,4 +449,4 @@ igt_main
 		close(fd);
 	}
 }
-#endif
+#endif /* __linux__ */

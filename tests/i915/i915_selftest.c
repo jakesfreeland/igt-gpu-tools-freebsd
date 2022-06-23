@@ -21,6 +21,9 @@
  * IN THE SOFTWARE.
  */
 
+/* TODO: FreeBSD - libkmod library */
+#ifdef __linux__
+
 #include "igt.h"
 #include "igt_kmod.h"
 
@@ -46,3 +49,4 @@ igt_main
 			    env) < sizeof(opts));
 	igt_kselftests("i915", opts, "perf_selftests", "perf");
 }
+#endif /* __linux__ */

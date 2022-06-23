@@ -3,6 +3,9 @@
  * Copyright © 2019 Intel Corporation
  */
 
+/* TODO: FreeBSD - libkmod library */
+#ifdef __linux__
+
 #include "igt.h"
 #include "igt_kmod.h"
 
@@ -12,3 +15,4 @@ igt_main
 {
 	igt_kselftests("test-drm_buddy", NULL, NULL, NULL);
 }
+#endif /* __linux__ */

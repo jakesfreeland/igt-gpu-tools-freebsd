@@ -25,7 +25,9 @@
 #define IGT_KMOD_H
 
 /* TODO: FreeBSD - libkmod library */
-/* #include <libkmod.h> */
+#ifdef __linux__
+
+#include <libkmod.h>
 
 #include "igt_list.h"
 
@@ -50,11 +52,6 @@ void igt_kselftests(const char *module_name,
 		    const char *module_options,
 		    const char *result_option,
 		    const char *filter);
-
-/* TODO: FreeBSD - TEMPORARY */
-struct kmod_module {
-	uint8_t mod;
-}; /* END TEMPORARY */
 
 struct igt_kselftest {
 	struct kmod_module *kmod;
@@ -84,4 +81,5 @@ int igt_kselftest_execute(struct igt_kselftest *tst,
 void igt_kselftest_end(struct igt_kselftest *tst);
 void igt_kselftest_fini(struct igt_kselftest *tst);
 
+#endif /* __linux__ */
 #endif /* IGT_KMOD_H */
