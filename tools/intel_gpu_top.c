@@ -21,6 +21,9 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #include "igt_device_scan.h"
 
 #include <assert.h>
@@ -2451,9 +2454,12 @@ static void show_help_screen(void)
 "    'h' or 'q'    Exit interactive help.\n"
 "\n");
 }
+#endif /* __linux__ */
 
 int main(int argc, char **argv)
 {
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
 	unsigned int period_us = DEFAULT_PERIOD_MS * 1000;
 	struct clients *clients = NULL;
 	int con_w = -1, con_h = -1;
@@ -2703,4 +2709,5 @@ err:
 exit:
 	igt_devices_free();
 	return ret;
+#endif /* __linux__ */
 }

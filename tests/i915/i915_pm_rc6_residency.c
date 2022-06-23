@@ -41,6 +41,9 @@
 #include "igt_sysfs.h"
 #include "sw_sync.h"
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #define SLEEP_DURATION 3 /* in seconds */
 
 #define RC6_ENABLED	1
@@ -530,9 +533,12 @@ static void rc6_fence(int i915)
 	rapl_close(&rapl);
 	close(fd);
 }
+#endif /* __linux__ */
 
 igt_main
 {
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
 	int i915 = -1;
 
 	/* Use drm_open_driver to verify device existence */
@@ -594,5 +600,5 @@ igt_main
 
 	igt_fixture
 		close(i915);
-
+#endif /* __linux__ */
 }

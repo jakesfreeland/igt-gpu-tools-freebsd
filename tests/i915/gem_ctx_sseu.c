@@ -47,6 +47,9 @@
 
 IGT_TEST_DESCRIPTION("Test context render powergating programming.");
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 static unsigned int __intel_gen__, __intel_devid__;
 static uint64_t __slice_mask__, __subslice_mask__;
 static unsigned int __slice_count__, __subslice_count__;
@@ -496,9 +499,12 @@ test_invalid_sseu(int fd)
 out:
 	gem_context_destroy(fd, arg.ctx_id);
 }
+#endif /* __linux__ */
 
 igt_main
 {
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
 	int fd;
 
 	igt_fixture {
@@ -547,4 +553,5 @@ igt_main
 	igt_fixture {
 		close(fd);
 	}
+#endif /* __linux__ */
 }

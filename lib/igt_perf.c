@@ -14,6 +14,9 @@
 
 #include "igt_perf.h"
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 static char *bus_address(int i915, char *path, int pathlen)
 {
 	struct stat st;
@@ -103,18 +106,15 @@ static int
 _perf_open(uint64_t type, uint64_t config, int group, uint64_t format)
 {
 	struct perf_event_attr attr = { };
-	/* TODO: FreeBSD - NCPU */
-	/* int nr_cpus = get_nprocs_conf(); */
-	long nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
+	int nr_cpus = get_nprocs_conf();
 	int cpu = 0, ret;
 
 	attr.type = type;
 	if (attr.type == 0)
 		return -ENOENT;
 
-	/* TODO: FreeBSD - PERF_FORMAT_GROUP not defined */
-// 	if (group >= 0)
-// 		format &= ~PERF_FORMAT_GROUP;
+	if (group >= 0)
+		format &= ~PERF_FORMAT_GROUP;
 
 	attr.read_format = format;
 	attr.config = config;
@@ -130,48 +130,37 @@ _perf_open(uint64_t type, uint64_t config, int group, uint64_t format)
 
 int perf_igfx_open(uint64_t config)
 {
-/* TODO: FreeBSD - PERFORMANCE METRICS */
-// 	return _perf_open(igt_perf_type_id("i915"), config, -1,
-// 			  PERF_FORMAT_TOTAL_TIME_ENABLED);
-	return -1;
+	return _perf_open(igt_perf_type_id("i915"), config, -1,
+			  PERF_FORMAT_TOTAL_TIME_ENABLED);
 }
 
 int perf_igfx_open_group(uint64_t config, int group)
 {
-/* TODO: FreeBSD - PERFORMANCE METRICS */
-// 	return _perf_open(igt_perf_type_id("i915"), config, group,
-// 			  PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_GROUP);
-	return -1;
+	return _perf_open(igt_perf_type_id("i915"), config, group,
+			  PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_GROUP);
 }
 
 int perf_i915_open(int i915, uint64_t config)
 {
-/* TODO: FreeBSD - PERFORMANCE METRICS */
-// 	return _perf_open(i915_perf_type_id(i915), config, -1,
-// 			  PERF_FORMAT_TOTAL_TIME_ENABLED);
-	return -1;
+	return _perf_open(i915_perf_type_id(i915), config, -1,
+			  PERF_FORMAT_TOTAL_TIME_ENABLED);
 }
 
 int perf_i915_open_group(int i915, uint64_t config, int group)
 {
-/* TODO: FreeBSD - PERFORMANCE METRICS */
-// 	return _perf_open(i915_perf_type_id(i915), config, group,
-// 			  PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_GROUP);
-	return -1;
+	return _perf_open(i915_perf_type_id(i915), config, group,
+			  PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_GROUP);
 }
 
 int igt_perf_open(uint64_t type, uint64_t config)
 {
-/* TODO: FreeBSD - PERFORMANCE METRICS */
-// 	return _perf_open(type, config, -1,
-// 			  PERF_FORMAT_TOTAL_TIME_ENABLED);
-	return -1;
+	return _perf_open(type, config, -1,
+			  PERF_FORMAT_TOTAL_TIME_ENABLED);
 }
 
 int igt_perf_open_group(uint64_t type, uint64_t config, int group)
 {
-/* TODO: FreeBSD - PERFORMANCE METRICS */
-// 	return _perf_open(type, config, group,
-// 			  PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_GROUP);
-	return -1;
+	return _perf_open(type, config, group,
+			  PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_GROUP);
 }
+#endif /* __linux__ */

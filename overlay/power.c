@@ -22,6 +22,9 @@
  *
  */
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -168,3 +171,4 @@ int power_update(struct power *power)
 
 	return 0;
 }
+#endif /* __linux__ */

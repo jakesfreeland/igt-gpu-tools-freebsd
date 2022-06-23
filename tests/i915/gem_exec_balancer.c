@@ -43,6 +43,9 @@
 
 IGT_TEST_DESCRIPTION("Exercise in-kernel load-balancing");
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #define MI_SEMAPHORE_WAIT		(0x1c << 23)
 #define   MI_SEMAPHORE_POLL             (1 << 15)
 #define   MI_SEMAPHORE_SAD_GT_SDD       (0 << 12)
@@ -3299,9 +3302,12 @@ static bool has_parallel_execbuf(int i915)
 
 	return false;
 }
+#endif /* __linux__ */
 
 igt_main
 {
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
 	int i915 = -1;
 
 	igt_fixture {
@@ -3467,4 +3473,5 @@ igt_main
 		igt_subtest("nohangcheck")
 			nohangcheck(i915);
 	}
+#endif /* __linux__ */
 }

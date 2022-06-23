@@ -22,6 +22,9 @@
  *
  */
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -129,3 +132,4 @@ int rc6_update(struct rc6 *rc6)
 	rc6->rc6_combined = 100 * (d_rc6 + d_rc6p + d_rc6pp) / d_time;
 	return 0;
 }
+#endif /* __linux__ */

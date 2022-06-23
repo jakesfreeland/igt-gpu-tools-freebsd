@@ -22,6 +22,9 @@
  *
  */
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -182,3 +185,4 @@ int gpu_freq_update(struct gpu_freq *gf)
 
 	return 0;
 }
+#endif /* __linux__ */

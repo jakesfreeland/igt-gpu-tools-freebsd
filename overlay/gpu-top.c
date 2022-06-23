@@ -22,6 +22,9 @@
  *
  */
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -169,3 +172,4 @@ int gpu_top_update(struct gpu_top *gt)
 
 	return update;
 }
+#endif /* __linux__ */

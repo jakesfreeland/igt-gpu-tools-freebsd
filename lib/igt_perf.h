@@ -25,23 +25,15 @@
 #ifndef I915_PERF_H
 #define I915_PERF_H
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #include <stdint.h>
 
-/* TODO: FreeBSD - PERFORMANCE METRICS */
-/* #include <linux/perf_event.h> */
+#include <linux/perf_event.h>
 
 #include "igt_gt.h"
 
-/* TODO: FreeBSD - TEMPORARY */
-struct perf_event_attr {
-	uint64_t type;
-	uint64_t read_format;
-	uint64_t config;
-	uint64_t use_clockid;
-	int32_t  clockid;
-};
-
-/* TODO: FreeBSD - PERFORMANCE METRICS */
 static inline int
 perf_event_open(struct perf_event_attr *attr,
 		pid_t pid,
@@ -49,18 +41,17 @@ perf_event_open(struct perf_event_attr *attr,
 		int group_fd,
 		unsigned long flags)
 {
-// #ifndef __NR_perf_event_open
-// #if defined(__i386__)
-// #define __NR_perf_event_open 336
-// #elif defined(__x86_64__)
-// #define __NR_perf_event_open 298
-// #else
-// #define __NR_perf_event_open 0
-// #endif
-// #endif
-//     attr->size = sizeof(*attr);
-//     return syscall(__NR_perf_event_open, attr, pid, cpu, group_fd, flags);
-		return -1;
+#ifndef __NR_perf_event_open
+#if defined(__i386__)
+#define __NR_perf_event_open 336
+#elif defined(__x86_64__)
+#define __NR_perf_event_open 298
+#else
+#define __NR_perf_event_open 0
+#endif
+#endif
+    attr->size = sizeof(*attr);
+    return syscall(__NR_perf_event_open, attr, pid, cpu, group_fd, flags);
 }
 
 uint64_t igt_perf_type_id(const char *device);
@@ -76,4 +67,5 @@ int perf_igfx_open_group(uint64_t config, int group);
 int perf_i915_open(int i915, uint64_t config);
 int perf_i915_open_group(int i915, uint64_t config, int group);
 
+#endif /* __linux__ */
 #endif /* I915_PERF_H */

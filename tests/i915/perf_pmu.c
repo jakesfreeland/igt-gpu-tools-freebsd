@@ -43,8 +43,7 @@
 #include "igt.h"
 #include "igt_core.h"
 #include "igt_device.h"
-/* TODO: FreeBSD - libkmod library */
-/* #include "igt_kmod.h" */
+#include "igt_kmod.h"
 #include "igt_perf.h"
 #include "igt_sysfs.h"
 #include "igt_pm.h"
@@ -52,6 +51,9 @@
 #include "sw_sync.h"
 
 IGT_TEST_DESCRIPTION("Test the i915 pmu perf interface");
+
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
 
 const double tolerance = 0.05f;
 const unsigned long batch_duration_ns = 500e6;
@@ -2104,8 +2106,7 @@ static void test_unload(unsigned int num_engines)
 		igt_debug("Read %d events from perf and trial unload\n", count);
 		pmu_read_multi(fd[0], count, buf);
 		ret = __igt_i915_driver_unload(&who);
-		/* TODO: FreeBSD - libkmod library */
-		/* igt_assert(ret != 0 && !strcmp(who, "i915")); */
+		igt_assert(ret != 0 && !strcmp(who, "i915"));
 		free(who);
 		pmu_read_multi(fd[0], count, buf);
 
@@ -2118,9 +2119,8 @@ static void test_unload(unsigned int num_engines)
 	}
 	igt_waitchildren();
 
-	/* TODO: FreeBSD - libkmod library */
-// 	igt_debug("Final unload\n");
-// 	igt_assert_eq(__igt_i915_driver_unload(NULL), 0);
+	igt_debug("Final unload\n");
+	igt_assert_eq(__igt_i915_driver_unload(NULL), 0);
 }
 
 #define test_each_engine(T, i915, ctx, e) \
@@ -2131,9 +2131,12 @@ static void test_unload(unsigned int num_engines)
 	igt_subtest_with_dynamic(T) for_each_ctx_engine(i915, ctx, e) \
 		for_each_if((e)->class == I915_ENGINE_CLASS_RENDER) \
 			igt_dynamic_f("%s", e->name)
+#endif /* __linux__ */
 
 igt_main
 {
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
 	const struct intel_execution_engine2 *e;
 	unsigned int num_engines = 0;
 	const intel_ctx_t *ctx = NULL;
@@ -2400,9 +2403,9 @@ igt_main
 	}
 
 	igt_subtest("module-unload") {
-		/* TODO: FreeBSD - libkmod library */
-		/* igt_require(igt_i915_driver_unload() == 0); */
+		igt_require(igt_i915_driver_unload() == 0);
 		for (int pass = 0; pass < 3; pass++)
 			test_unload(num_engines);
 	}
+#endif /* __linux__ */
 }

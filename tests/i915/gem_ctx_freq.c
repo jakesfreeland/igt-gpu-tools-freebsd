@@ -35,6 +35,9 @@
 #include "igt_sysfs.h"
 #include "sw_sync.h"
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #define SAMPLE_PERIOD (USEC_PER_SEC / 10)
 #define PMU_TOLERANCE 100
 
@@ -197,9 +200,12 @@ static void disable_boost(void)
 	if (igt_sysfs_read(sysfs, "gt_RP0_freq_mhz", buf, sizeof(buf)) > 0)
 		igt_sysfs_set(sysfs, "gt_max_freq_mhz", buf);
 }
+#endif /* __linux__ */
 
 igt_main
 {
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
 	int i915 = -1;
 
 	igt_fixture {
@@ -215,4 +221,5 @@ igt_main
 
 	igt_subtest_f("sysfs")
 		sysfs_range(i915);
+#endif /* __linux__ */
 }
