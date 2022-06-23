@@ -25,58 +25,63 @@
 #define IGT_KMOD_H
 
 /* TODO: FreeBSD - libkmod library */
-// #include <libkmod.h>
-// 
-// #include "igt_list.h"
-// 
-// bool igt_kmod_is_loaded(const char *mod_name);
-// void igt_kmod_list_loaded(void);
-// 
-// bool igt_kmod_has_param(const char *mod_name, const char *param);
-// 
-// int igt_kmod_load(const char *mod_name, const char *opts);
-// int igt_kmod_unload(const char *mod_name, unsigned int flags);
-// 
-// int igt_audio_driver_unload(char **whom);
-// 
-// int igt_i915_driver_load(const char *opts);
-// int igt_i915_driver_unload(void);
-// int __igt_i915_driver_unload(char **whom);
-// 
-// int igt_amdgpu_driver_load(const char *opts);
-// int igt_amdgpu_driver_unload(void);
-// 
-// void igt_kselftests(const char *module_name,
-// 		    const char *module_options,
-// 		    const char *result_option,
-// 		    const char *filter);
-// 
-// struct igt_kselftest {
-// 	struct kmod_module *kmod;
-// 	char *module_name;
-// 	int kmsg;
-// };
-// 
-// struct igt_kselftest_list {
-// 	struct igt_list_head link;
-// 	unsigned int number;
-// 	char *name;
-// 	char param[];
-// };
-// 
-// int igt_kselftest_init(struct igt_kselftest *tst,
-// 		       const char *module_name);
-// int igt_kselftest_begin(struct igt_kselftest *tst);
-// 
-// void igt_kselftest_get_tests(struct kmod_module *kmod,
-// 			     const char *filter,
-// 			     struct igt_list_head *tests);
-// int igt_kselftest_execute(struct igt_kselftest *tst,
-// 			  struct igt_kselftest_list *tl,
-// 			  const char *module_options,
-// 			  const char *result);
-// 
-// void igt_kselftest_end(struct igt_kselftest *tst);
-// void igt_kselftest_fini(struct igt_kselftest *tst);
+/* #include <libkmod.h> */
+
+#include "igt_list.h"
+
+bool igt_kmod_is_loaded(const char *mod_name);
+void igt_kmod_list_loaded(void);
+
+bool igt_kmod_has_param(const char *mod_name, const char *param);
+
+int igt_kmod_load(const char *mod_name, const char *opts);
+int igt_kmod_unload(const char *mod_name, unsigned int flags);
+
+int igt_audio_driver_unload(char **whom);
+
+int igt_i915_driver_load(const char *opts);
+int igt_i915_driver_unload(void);
+int __igt_i915_driver_unload(char **whom);
+
+int igt_amdgpu_driver_load(const char *opts);
+int igt_amdgpu_driver_unload(void);
+
+void igt_kselftests(const char *module_name,
+		    const char *module_options,
+		    const char *result_option,
+		    const char *filter);
+
+/* TODO: FreeBSD - TEMPORARY */
+struct kmod_module {
+	uint8_t mod;
+}; /* END TEMPORARY */
+
+struct igt_kselftest {
+	struct kmod_module *kmod;
+	char *module_name;
+	int kmsg;
+};
+
+struct igt_kselftest_list {
+	struct igt_list_head link;
+	unsigned int number;
+	char *name;
+	char param[];
+};
+
+int igt_kselftest_init(struct igt_kselftest *tst,
+		       const char *module_name);
+int igt_kselftest_begin(struct igt_kselftest *tst);
+
+void igt_kselftest_get_tests(struct kmod_module *kmod,
+			     const char *filter,
+			     struct igt_list_head *tests);
+int igt_kselftest_execute(struct igt_kselftest *tst,
+			  struct igt_kselftest_list *tl,
+			  const char *module_options,
+			  const char *result);
+
+void igt_kselftest_end(struct igt_kselftest *tst);
+void igt_kselftest_fini(struct igt_kselftest *tst);
 
 #endif /* IGT_KMOD_H */
