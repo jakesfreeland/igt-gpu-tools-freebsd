@@ -33,6 +33,7 @@
 #include <sys/time.h>
 #include <sys/times.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <dirent.h>
 #include <time.h>
 #include <poll.h>
