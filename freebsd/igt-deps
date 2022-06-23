@@ -27,10 +27,10 @@ libX11
 libXext
 xorgproto
 libXrandr
+peg
 gtk-doc
 
 NOT FOUND:
 libkmod
 libprocps
-peg
 
