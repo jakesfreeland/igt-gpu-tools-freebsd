@@ -22,12 +22,14 @@
  */
 
 #include "igt.h"
-/* TODO: FreeBSD - libkmod library */
-/* #include "igt_kmod.h" */
+#include "igt_kmod.h"
 
 #include <amdgpu.h>
 #include <amdgpu_drm.h>
 #include <sys/ioctl.h>
+
+/* TODO: FreeBSD - libkmod library */
+#ifdef __linux__
 
 /**
  * sanity_check:
@@ -59,28 +61,30 @@ static void sanity_check(void)
 
 	igt_assert_eq(err, 0);
 }
+#endif /* __linux__ */
 
 igt_main
 {
 /* TODO: FreeBSD - libkmod library */
-// 	igt_describe("Make sure reloading amdgpu drivers works");
-// 	igt_subtest("reload") {
-// 		int err;
-// 		igt_amdgpu_driver_unload();
-// 
-// 		err = igt_amdgpu_driver_load(NULL);
-// 
-// 		igt_assert_eq(err, 0);
-// 
-// 		sanity_check();
-// 
-// 		igt_amdgpu_driver_unload();
+#ifdef __linux__
+	igt_describe("Make sure reloading amdgpu drivers works");
+	igt_subtest("reload") {
+		int err;
+		igt_amdgpu_driver_unload();
+
+		err = igt_amdgpu_driver_load(NULL);
+
+		igt_assert_eq(err, 0);
+
+		sanity_check();
+
+		igt_amdgpu_driver_unload();
 	}
 
 	igt_fixture
 	{
-/* TODO: FreeBSD - libkmod library */
-// 		/* load the module back in */
-// 		igt_amdgpu_driver_load(NULL);
+		/* load the module back in */
+		igt_amdgpu_driver_load(NULL);
 	}
+#endif /* __linux__ */
 }
