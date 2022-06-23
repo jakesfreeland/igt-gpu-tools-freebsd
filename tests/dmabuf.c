@@ -28,6 +28,5 @@ IGT_TEST_DESCRIPTION("Kernel selftests for the dmabuf API");
 
 igt_main
 {
-	/* TODO: FreeBSD - DMABUF, libkmod */
-	/* igt_kselftests("dmabuf_selftests", NULL, NULL, NULL); */
+	igt_kselftests("dmabuf_selftests", NULL, NULL, NULL);
 }
