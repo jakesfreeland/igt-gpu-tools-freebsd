@@ -41,6 +41,14 @@
 #define	mmap64(addr, len, prot, flags, fd, offset) \
 	mmap(addr, len, prot, flags, fd, offset)
 
+#ifdef __FreeBSD__
+#define PTRACE_TRACEME  PT_TRACE_ME
+#define PTRACE_ATTACH   PT_ATTACH
+#define	PTRACE_PEEKDATA PT_READ_D
+#define PTRACE_POKEDATA PT_WRITE_D
+#define PTRACE_DETACH   PT_DETACH
+#endif
+
 IGT_TEST_DESCRIPTION("Basic MMAP_OFFSET IOCTL tests for mem regions\n");
 
 static int mmap_offset_ioctl(int i915, struct drm_i915_gem_mmap_offset *arg)
