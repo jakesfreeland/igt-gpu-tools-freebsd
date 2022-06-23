@@ -21,9 +21,6 @@
  * IN THE SOFTWARE.
  */
 
-/* TODO: FreeBSD - libkmod library */
-#ifdef __linux__
-
 #include "igt.h"
 #include "igt_kmod.h"
 
@@ -31,6 +28,8 @@ IGT_TEST_DESCRIPTION("Basic sanity check of DRM's range manager (struct drm_mm)"
 
 igt_main
 {
+/* TODO: FreeBSD - libkmod library */
+#ifdef __linux__
 	igt_kselftests("test-drm_mm", NULL, NULL, NULL);
+#endif
 }
-#endif /* __linux__ */

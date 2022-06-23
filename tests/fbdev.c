@@ -21,12 +21,12 @@
  * IN THE SOFTWARE.
  */
 
-/* TODO: FreeBSD - FBDEV COMPAT */
-#ifdef __linux__
-
 #include "config.h"
 
 #include "igt.h"
+
+/* TODO: FreeBSD - FBDEV COMPAT */
+#ifdef __linux__
 
 #include <errno.h>
 #include <fcntl.h>
@@ -417,9 +417,12 @@ static void framebuffer_tests(int fd)
 		munmap(map, fix_info.smem_len);
 	}
 }
+#endif /* __linux__ */
 
 igt_main
 {
+/* TODO: FreeBSD - FBDEV COMPAT */
+#ifdef __linux__
 	volatile int fd = -1;
 
 	/*
@@ -448,5 +451,5 @@ igt_main
 	igt_fixture {
 		close(fd);
 	}
-}
 #endif /* __linux__ */
+}

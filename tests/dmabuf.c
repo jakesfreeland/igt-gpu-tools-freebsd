@@ -21,9 +21,6 @@
  * IN THE SOFTWARE.
  */
 
-/* TODO: FreeBSD - libkmod library */
-#ifdef __linux__
-
 #include "igt.h"
 #include "igt_kmod.h"
 
@@ -31,6 +28,8 @@ IGT_TEST_DESCRIPTION("Kernel selftests for the dmabuf API");
 
 igt_main
 {
+/* TODO: FreeBSD - libkmod library */
+#ifdef __linux__
 	igt_kselftests("dmabuf_selftests", NULL, NULL, NULL);
+#endif
 }
-#endif /* __linux__ */

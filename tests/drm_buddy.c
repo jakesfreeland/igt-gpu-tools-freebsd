@@ -3,9 +3,6 @@
  * Copyright © 2019 Intel Corporation
  */
 
-/* TODO: FreeBSD - libkmod library */
-#ifdef __linux__
-
 #include "igt.h"
 #include "igt_kmod.h"
 
@@ -13,6 +10,8 @@ IGT_TEST_DESCRIPTION("Basic sanity check of DRM's buddy allocator (struct drm_bu
 
 igt_main
 {
+/* TODO: FreeBSD - libkmod library */
+#ifdef __linux__
 	igt_kselftests("test-drm_buddy", NULL, NULL, NULL);
+#endif
 }
-#endif /* __linux__ */

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-/* TODO: FreeBSD - DMABUF */
-#ifdef __linux__
-
 #include "igt.h"
 #include "igt_vgem.h"
 #include "sw_sync.h"
+
+/* TODO: FreeBSD - DMABUF */
+#ifdef __linux__
 
 #include <linux/dma-buf.h>
 #include <sys/poll.h>
@@ -463,9 +463,12 @@ static void test_import_multiple(int fd, bool write)
 	igt_assert(!dmabuf_busy(dmabuf, DMA_BUF_SYNC_WRITE));
 	igt_assert(!sync_file_busy(write_sync_file));
 }
+#endif /* __linux__ */
 
 igt_main
 {
+/* TODO: FreeBSD - DMABUF */
+#ifdef __linux__
 	int fd;
 
 	igt_fixture {
@@ -508,5 +511,5 @@ igt_main
 		     "operations.");
 	igt_subtest("import-multiple-read-write")
 		test_import_multiple(fd, true);
-}
 #endif /* __linux__ */
+}

@@ -21,9 +21,6 @@
  * IN THE SOFTWARE.
  */
 
-/* TODO: FreeBSD - libkmod library */
-#ifdef __linux__
-
 #include "igt.h"
 #include "igt_kmod.h"
 
@@ -31,6 +28,8 @@ IGT_TEST_DESCRIPTION("Basic unit tests for i915.ko");
 
 igt_main
 {
+/* TODO: FreeBSD - libkmod library */
+#ifdef __linux__
 	const char *env = getenv("SELFTESTS") ?: "";
 	char opts[1024];
 
@@ -48,5 +47,5 @@ igt_main
 			    "perf_selftests=-1 disable_display=1 st_filter=%s",
 			    env) < sizeof(opts));
 	igt_kselftests("i915", opts, "perf_selftests", "perf");
-}
 #endif /* __linux__ */
+}
