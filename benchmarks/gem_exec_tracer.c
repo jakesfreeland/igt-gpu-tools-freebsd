@@ -41,6 +41,8 @@
 #include "intel_aub.h"
 #include "intel_chipset.h"
 
+#define	_IOC_TYPE(nr)	(((nr) >> 8) & 255)
+
 static int (*libc_close)(int fd);
 static int (*libc_ioctl)(int fd, unsigned long request, void *argp);
 
