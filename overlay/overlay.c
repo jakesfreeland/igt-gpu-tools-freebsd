@@ -22,6 +22,9 @@
  *
  */
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <cairo.h>
@@ -848,9 +851,11 @@ static void usage(const char *progname)
 	printf("\t--foreground|-f\t\t\t\t\t\tKeep the application in foreground\n");
 	printf("\t--help|-h\t\t\t\t\t\tThis help message\n");
 }
+#endif /* __linux__ */
 
 int main(int argc, char **argv)
 {
+#ifdef __linux__
 	static struct option long_options[] = {
 		{"config", 1, 0, 'c'},
 		{"geometry", 1, 0, 'G'},
@@ -972,4 +977,6 @@ int main(int argc, char **argv)
 	}
 
 	return 0;
+#endif /* __linux__ */
+	return -1
 }
