@@ -4,6 +4,7 @@
 #include <glib.h>
 #if defined(__linux__)
 #include <linux/watchdog.h>
+#include <sys/signalfd.h>
 #elif defined(__FreeBSD__)
 #include <sys/watchdog.h>
 #endif
@@ -18,7 +19,6 @@
 #include <sys/ioctl.h>
 #include <sys/select.h>
 #include <sys/poll.h>
-#include <sys/signalfd.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -36,6 +36,12 @@
 
 #define KMSG_HEADER "[IGT] "
 #define KMSG_WARN 4
+
+struct signalfd_siginfo
+{
+	uint32_t ssi_signo;
+	uint32_t ssi_pid;
+};
 
 static struct {
 	int *fds;
@@ -1932,7 +1938,9 @@ bool execute(struct execute_state *state,
 	sigaddset(&sigmask, SIGTERM);
 	sigaddset(&sigmask, SIGQUIT);
 	sigaddset(&sigmask, SIGHUP);
-	sigfd = signalfd(-1, &sigmask, O_CLOEXEC);
+	/* TODO: FreeBSD - signalfd */
+	/* sigfd = signalfd(-1, &sigmask, O_CLOEXEC); */
+	sigfd = -1;
 	sigprocmask(SIG_BLOCK, &sigmask, NULL);
 
 	if (sigfd < 0) {
