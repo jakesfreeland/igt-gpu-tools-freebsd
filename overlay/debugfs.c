@@ -50,7 +50,8 @@ int debugfs_init(void)
 	if (stat("/sys/kernel/debug", &st))
 		return errno;
 
-	if (mount("debug", "/sys/kernel/debug", "debugfs", 0, 0))
+	/* if (mount("debug", "/sys/kernel/debug", "debugfs", 0, 0)) */
+	if (mount("debugfs", "/sys/fs/debugfs", 0, 0))
 		return errno;
 
 find_minor:
