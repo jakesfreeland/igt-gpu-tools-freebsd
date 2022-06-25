@@ -57,6 +57,11 @@
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
+#ifndef	CLOCK_MONOTONIC_RAW
+/* TODO: FreeBSD - RAW is CLOCK_MONOTONIC w/o adjtime */
+#define	CLOCK_MONOTONIC_RAW	CLOCK_MONOTONIC
+#endif
+
 struct circular_buffer {
 	char   *data;
 	size_t  allocated_size;
