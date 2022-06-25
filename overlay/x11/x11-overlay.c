@@ -22,6 +22,9 @@
  *
  */
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #include <X11/Xlib.h>
 #include <X11/extensions/Xvlib.h>
 #include <sys/types.h>
@@ -361,3 +364,4 @@ void x11_overlay_stop(void)
 close:
 	XCloseDisplay(dpy);
 }
+#endif /* __linux__ */

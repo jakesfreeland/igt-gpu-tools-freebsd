@@ -22,6 +22,9 @@
  *
  */
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #include <X11/Xlib.h>
 #include <cairo.h>
 #include <cairo-xlib.h>
@@ -175,3 +178,4 @@ err_win:
 	XCloseDisplay(dpy);
 	return NULL;
 }
+#endif /* __linux__ */

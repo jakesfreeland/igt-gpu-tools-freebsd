@@ -22,6 +22,9 @@
  *
  */
 
+/* TODO: FreeBSD - PERFORMANCE METRICS */
+#ifdef __linux__
+
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <cairo.h>
@@ -332,3 +335,4 @@ err_priv:
 	free(priv);
 	return NULL;
 }
+#endif /* __linux__ */
