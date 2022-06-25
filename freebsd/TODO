@@ -1,0 +1,136 @@
+This TODO list contains information about the status of igt-gpu-tools-freebsd.
+The list is sorted starting with high priority and ending with low priority.
+
+----- FORMAT -----
+ISSUE: [STATUS]
+	* PURPOSE
+	* SOLUTION
+	* AFFECTED FILES
+	* PRIORITY
+------------------
+
+Get system RAM and SWAP space [NOT STARTED]
+	* core functionality
+	* replace Linux-specific query with a FreeBSD compatible equivalent
+	* igt_os.c
+	* HIGH
+
+FreeBSD debugfs port [NOT STARTED]
+	* core functionality for drm testing
+	* port debugfs to FreeBSD
+	* igt_debugfs.c, igt_debugfs.h and all files that include it
+	* HIGH
+
+Linux <linux/perf_event.h> performance monitoring [NOT STARTED]
+	* Enables hardware performance monitoring
+	* integrate perf_event functionality or use a FreeBSD equivalent
+	* igt_rapl.c, igt_perf.h, igt_perf.c, kms-overlay.c, x11-overlay.c,
+		x11-window.c, gem_interrupts.c, gpu-freq.c, gpu-top.c, power.c,
+		rc6.c, gpu-perf.c, overlay.c, perf_pmu.c, gem_ctx_freq.c,
+		gem_ctx_sseu.c, gem_exec_balancer.c, i915_pm_rc6_residency.c,
+		intel_gpu_top.c
+	* ???
+
+FreeBSD libkmod port [NOT STARTED]
+	* enable kernel module loading and testing
+	* port libkmod to FreeBSD
+	* sw_sync.c, drmtest.c, igt_kmod.c, igt_kmod.h, amd_module_load.c,
+		i915_pm_lpsp.c, i915_pm_dc.c, i915_suspend.c, gem_lmem_swapping.c,
+		i915_module_load.c, i915_pm_rpm.c, i915_selftest.c, device_reset.c,
+		core_hotunplug.c, kms_content_protection.c, vgem_basic.c,
+		drm_buddy.c, dmabuf.c, drm_mm.c, kms_selftest.c
+	* ???
+
+Linux <linux/dma-buf.h> direct memory access testing [NOT STARTED]
+	* testing for dma-buf
+	* implement Linux compatible DMA-BUF support or use a similar alternative for FreeBSD
+	* dmabuf_sync_file.c
+	* ???
+
+Linux <linux/fb.h> frame buffer api access [NOT STARTED]
+	* testing for fbdev
+	* implement Linux compatible fbdev support or use a similar alternative for FreeBSD
+	* fbdev.c
+	* ???
+
+Page fault handling in the userspace using userfaultfd syscall [NOT STARTED]
+	* provides page fault handling and access for gem testing
+	* implement a behavior similar to userfaultfd in FreeBSD
+	* gem_exec_schedule.c, gem_pread.c, gem_pwrite.c, gem_userptr_blits.c
+	* ???
+
+FreeBSD libprocps port [NOT STARTED]
+	* sound testing using the procfs file system
+	* port libprocps to FreeBSD
+	* igt_aux.c
+	* ???
+
+Thread tracking: [NOT STARTED]
+	* intended thread reporting
+	* implementation of gettid() or an alternative
+	* gem_syslatency.c, intel_allocator.c, igt_core.c, igt_aux.c,
+		gem_close_race.c, drm_import_export.c, core_auth.c
+	* ???
+
+Linux <linux/timerfd.h> timer monitoring [NOT STARTED]
+	* timer monitoring using poll() and epoll() through a file descriptor
+	* use the POSIX timer (w/o monitoring) or implement a FreeBSD compatible timerfd
+	* igt_dummyload.c, kms_psr2_su.c, kms_psr_stress_test.c
+	* ???
+
+Add SCHED_RESET_ON_FORK option to sched_setscheduler() [NOT STARTED]
+	* stops forked processes from inheriting privileged scheduling policies
+	* add SCHED_RESET_ON_FORK functionality to process scheduler
+	* gem_exec_latency.c, gem_exec_schedule.c
+	* ???
+
+Update FreeBSD madvise to include MADV_DONTFORK [NOT STARTED]
+	* stops forked processes from sharing memory, especially important for CoW filesystems
+		like zfs.
+	* implement madvise behavior similar to MADV_DONTFORK
+	* gem_concurrent_all.c
+	* ???
+
+Linux <sys/signalfd.h> signal response [NOT STARTED]
+	* handles and reports signals that are sent to a file descriptor
+	* use another signal handler (w/o monitoring)
+	* executor.c
+	* LOW
+
+implement Linux clock's CLOCK_MONOTONIC_RAW behavior [NOT STARTED]
+	* CLOCK_MONOTONIC_RAW ignores adjtime/ntp adjustments
+	* implement clock option
+	* i915_perf_recorder.c
+	* LOW
+
+watchdog WDIOC_KEEPALIVE behavior [NOT STARTED]
+	* keep attached process alive
+	* create/use FreeBSD alternative watchdog behavior
+	* executor.c
+	* LOW
+
+tdestroy() binary tree implementation [NOT STARTED]
+	* prevent memory leak
+	* create FreeBSD compatible tdestroy()
+	* intel_batchbuffer.c
+	* LOW
+
+transition from MSR to cpucontrol() register reading [NOT STARTED]
+	* cpucontrol is already implemented
+	* convert MSR code to be cpucontrol compatible
+	* intel_batchbuffer.c
+	* LOW
+
+I/O privilege modifications [DONE, NEEDS REVISION]
+	* give application access to different I/O privilege levels
+	* change I/O privilege level using iopl()
+		OR open FreeBSD io_dev to give program I/O privilege
+	* intel_reg.c
+	* LOW
+
+transition i2c I/O control to iic [DONE, NEEDS TESTING]
+	* iic is already implemented
+	* convert i2c code to be iic compatible
+	* i915_pm_rpm.c
+	* LOW
+
