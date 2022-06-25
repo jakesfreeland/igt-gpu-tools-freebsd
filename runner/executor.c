@@ -162,7 +162,9 @@ static void ping_watchdogs(void)
 	int ret;
 
 	for (i = 0; i < watchdogs.num_dogs; i++) {
-		ret = ioctl(watchdogs.fds[i], WDIOC_KEEPALIVE, NULL);
+		/* TODO: FreeBSD - WDIOC_KEEPALIVE not present in FreeBSD */
+		/* ret = ioctl(watchdogs.fds[i], WDIOC_KEEPALIVE, NULL); */
+		ret = -1;
 		if (ret == -1)
 			errf("Failed to ping a watchdog: %m\n");
 	}
