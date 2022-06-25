@@ -978,5 +978,5 @@ int main(int argc, char **argv)
 
 	return 0;
 #endif /* __linux__ */
-	return -1
+	return -1;
 }
