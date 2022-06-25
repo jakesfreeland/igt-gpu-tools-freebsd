@@ -29,6 +29,8 @@
 
 #include "i915_perf_recorder_commands.h"
 
+#define	get_current_dir_name()	getcwd(NULL, NULL)
+
 static void
 usage(const char *name)
 {

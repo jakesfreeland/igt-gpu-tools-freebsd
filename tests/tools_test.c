@@ -36,6 +36,8 @@
 
 #define TOOLS "../tools/"
 
+#define	get_current_dir_name()	getcwd(NULL, NULL)
+
 struct line_check {
 	int found;
 	const char *substr;
@@ -69,7 +71,7 @@ static bool chdir_to_tools_dir(void)
 	char path[PATH_MAX];
 	char *cwd;
 
-	cwd = getcwd(NULL, NULL);
+	cwd = get_current_dir_name();
 	igt_info("Current working directory: %s\n", cwd);
 	free(cwd);
 
@@ -87,7 +89,7 @@ static bool chdir_to_tools_dir(void)
 		chdir(dirname(path));
 	}
 
-	cwd = getcwd(NULL, NULL);
+	cwd = get_current_dir_name();
 	igt_info("Current working directory: %s\n", cwd);
 	free(cwd);
 
@@ -103,7 +105,7 @@ igt_main
 
 		igt_require_f(chdir_to_tools_dir(),
 			      "Unable to determine the tools directory, expecting them in $cwd/" TOOLS " or $path/" TOOLS "\n");
-		path = getcwd(NULL, NULL);
+		path = get_current_dir_name();
 		igt_info("Using tools from %s\n", path);
 		free(path);
 	}
