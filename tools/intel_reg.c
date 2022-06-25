@@ -43,8 +43,19 @@
 
 #ifdef HAVE_SYS_IO_H
 #include <sys/io.h>
-#else
+#define IO_DEV_OPEN
+#define IO_DEV_CLOSE
 
+#elif	defined(__FreeBSD__)
+/* TODO: FreeBSD - is cpufunc.h meant to be included directly? */
+#include <machine/cpufunc.h>
+#include <fcntl.h>
+#define iopl(level)
+/* TODO: FreeBSD - io_dev */
+#define IO_DEV_OPEN            int io_dev = open("/dev/io", O_RDONLY);
+#define IO_DEV_CLOSE           fclose(io_dev);
+
+#else
 static inline int _not_supported(void)
 {
        fprintf(stderr, "portio-vga not supported\n");
@@ -53,22 +64,10 @@ static inline int _not_supported(void)
 #define inb(port)              _not_supported()
 #define outb(value, port)      _not_supported()
 #define iopl(level)
-
-#endif /* HAVE_SYS_IO_H */
-
-#ifdef __FreeBSD__
-/* TODO: FreeBSD - is cpufunc.h meant to be included directly? */
-#include <machine/cpufunc.h>
-#include <fcntl.h>
-
-#define iopl(level)
-#define IO_DEV_OPEN            int io_dev = open("/dev/io", O_RDONLY);
-#define IO_DEV_CLOSE           fclose(io_dev);
-
-#else /* !__FreeBSD__ */
 #define IO_DEV_OPEN
 #define IO_DEV_CLOSE
-#endif /* __FreeBSD__ */
+
+#endif /* HAVE_SYS_IO_H */
 
 struct config {
 	struct pci_device *pci_dev;
