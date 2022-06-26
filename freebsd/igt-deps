@@ -28,6 +28,7 @@ libXext
 xorgproto
 libXrandr
 peg
+py-docutils
 gtk-doc
 
 NOT FOUND:
