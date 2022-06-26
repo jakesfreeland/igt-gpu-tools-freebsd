@@ -44,10 +44,10 @@ IGT_TEST_DESCRIPTION("Checks that the kernel reports EFAULT when trying to use"
 
 #define OBJECT_SIZE (1024*1024)
 
+/* some BSDs use sig_t instead of sighandler_t */
 #ifndef HAVE_SIGHANDLER_T
 #define	sighandler_t	sig_t
 #endif
-
 
 /*
  * Testcase: checks that the kernel reports EFAULT when trying to use purged bo

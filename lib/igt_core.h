@@ -156,6 +156,11 @@ __noreturn void __igt_fixture_end(void);
 			 igt_unique(__tmpint) ++, \
 			 __igt_fixture_complete())
 
+/* avoid sigsetjmp() pointer mismatch compilation warnings in FreeBSD */
+#ifdef __FreeBSD__
+#define	jmp_buf	sigjmp_buf
+#endif
+
 /* subtest infrastructure */
 extern jmp_buf igt_subtest_jmpbuf;
 extern jmp_buf igt_dynamic_jmpbuf;

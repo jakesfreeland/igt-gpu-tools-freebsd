@@ -35,6 +35,9 @@
 #include <sys/ioctl.h>
 #include "vc4_drm.h"
 
+/* jmp_buf from igt_core.h creates warnings here */
+#undef	jmp_buf
+
 struct igt_vc4_bo {
 	struct igt_list_head node;
 	int handle;

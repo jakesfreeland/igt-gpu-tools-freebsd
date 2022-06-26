@@ -45,6 +45,7 @@
 #define ATTR "heartbeat_interval_ms"
 #define RESET_TIMEOUT 50 /* milliseconds, at least one jiffie for kworker */
 
+/* some BSDs use sig_t instead of sighandler_t */
 #ifndef HAVE_SIGHANDLER_T
 #define	sighandler_t	sig_t
 #endif

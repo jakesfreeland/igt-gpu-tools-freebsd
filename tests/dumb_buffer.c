@@ -50,6 +50,10 @@
 #include "igt_aux.h"
 #include "ioctl_wrappers.h"
 
+/* jmp_buf from igt_core.h creates warnings here */
+#undef	jmp_buf
+
+/* some BSDs use sig_t instead of sighandler_t */
 #ifndef HAVE_SIGHANDLER_T
 #define	sighandler_t	sig_t
 #endif

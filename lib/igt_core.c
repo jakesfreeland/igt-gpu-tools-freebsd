@@ -2467,6 +2467,7 @@ void igt_waitchildren_timeout(int seconds, const char *reason)
 #define MAX_SIGNALS		32
 #define MAX_EXIT_HANDLERS	10
 
+/* some BSDs use sig_t instead of sighandler_t */
 #ifndef HAVE_SIGHANDLER_T
 #define	sighandler_t	sig_t
 #endif
