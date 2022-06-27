@@ -9,7 +9,7 @@ ISSUE: [STATUS]
 	* PRIORITY
 ------------------
 
-Get system RAM and SWAP space [NOT STARTED]
+Get system RAM and SWAP space [DONE, NEEDS TESTING]
 	* core functionality
 	* replace Linux-specific query with a FreeBSD compatible equivalent
 	* igt_os.c
